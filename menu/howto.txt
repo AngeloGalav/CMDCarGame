@@ -1,0 +1,21 @@
+How to Play:
+
+Use the ARROW KEYS to move. Collect the Gas Tanks and avoid the other cars and mud puddles!
+If you hit a car, you'll go back to the previous level!
+If you get back to level 1 and you either hit a car or go below zero, you'll die!
+Every 1000 points, you level up and the game will get harder, try not to die >:)
+
+If you want to have a bigger window, just change the font size on the terminal options.
+
+You can always go to the Game Over menu by pressing ESC during gameplay. This way you'll be
+able to exit or restart the game at any time.
+
+Credits:
+
+Angelo Galavotti, Adriano Pace, Denis Pondini.
+
+build ver. 1.0.1
+
+
+
+## Press ENTER to go back ## 

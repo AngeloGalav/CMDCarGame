@@ -1,0 +1,15 @@
+#ifndef CONSOLESPRITE_H
+#define CONSOLESPRITE_H
+
+
+class ConsoleSprite
+{
+    public:
+        ConsoleSprite();
+
+    protected:
+
+    private:
+};
+
+#endif // CONSOLESPRITE_H

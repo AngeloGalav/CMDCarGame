@@ -1,0 +1,295 @@
+# depslib dependency file v1.0
+1602978376 source:c:\documents and settings\ok\desktop\cargameprogrammazione\main.cpp
+	"LevelManager.h"
+	"Menu.h"
+
+1602972113 source:c:\documents and settings\ok\desktop\cargameprogrammazione\car.cpp
+	"Car.h"
+
+1602971923 c:\documents and settings\ok\desktop\cargameprogrammazione\car.h
+	"ConsoleSprite.h"
+
+1595604986 c:\documents and settings\ok\desktop\cargameprogrammazione\include\positionable.h
+
+1602947626 c:\documents and settings\ok\desktop\cargameprogrammazione\consolesprite.h
+	<fstream>
+	<string>
+	"Pixel.h"
+
+1595606840 source:c:\documents and settings\ok\desktop\cargameprogrammazione\src\positionable.cpp
+	"Positionable.h"
+
+1602938528 source:c:\documents and settings\ok\desktop\cargameprogrammazione\consolesprite.cpp
+	"ConsoleSprite.h"
+
+1602938790 c:\documents and settings\ok\desktop\cargameprogrammazione\pixel.h
+	<conio.h>
+	<windows.h>
+	<iostream>
+
+1602936892 source:c:\documents and settings\ok\desktop\cargameprogrammazione\pixel.cpp
+	"Pixel.h"
+
+1595787532 source:c:\documents and settings\ok\desktop\cargameprogrammazione\textwindow.cpp
+	"TextWindow.h"
+
+1595776033 c:\documents and settings\ok\desktop\cargameprogrammazione\textwindow.h
+	"Pixel.h"
+
+1601336146 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\car.cpp
+	"Car.h"
+
+1601336522 c:\users\asus\desktop\corso informatica\cargameprogrammazione\car.h
+	"ConsoleSprite.h"
+
+1601998138 c:\users\asus\desktop\corso informatica\cargameprogrammazione\consolesprite.h
+	<fstream>
+	<string>
+	"Pixel.h"
+
+1601996547 c:\users\asus\desktop\corso informatica\cargameprogrammazione\pixel.h
+	<conio.h>
+	<windows.h>
+	<iostream>
+
+1601998098 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\consolesprite.cpp
+	"ConsoleSprite.h"
+
+1602267447 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\main.cpp
+	"LevelManager.h"
+
+1601996508 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\pixel.cpp
+	"Pixel.h"
+
+1597503404 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\textwindow.cpp
+	"TextWindow.h"
+
+1597503404 c:\users\asus\desktop\corso informatica\cargameprogrammazione\textwindow.h
+	"Pixel.h"
+
+1595606840 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\positionable.cpp
+	"Positionable.h"
+
+1595604986 c:\users\asus\desktop\corso informatica\cargameprogrammazione\positionable.h
+
+1601996310 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\collectable.cpp
+	"Collectable.h"
+
+1601372021 c:\users\asus\desktop\corso informatica\cargameprogrammazione\collectable.h
+	"ConsoleSprite.h"
+	"Car.h"
+
+1597424095 source:z:\cargameprogrammazione\car.cpp
+	"Car.h"
+
+1597422988 z:\cargameprogrammazione\car.h
+	"ConsoleSprite.h"
+
+1597422203 z:\cargameprogrammazione\consolesprite.h
+	<fstream>
+	<string>
+	"Pixel.h"
+
+1596239799 z:\cargameprogrammazione\pixel.h
+	<limits>
+	<conio.h>
+	<windows.h>
+	<iostream>
+
+1597424546 source:z:\cargameprogrammazione\collectable.cpp
+	"Collectable.h"
+
+1597423424 z:\cargameprogrammazione\collectable.h
+	"ConsoleSprite.h"
+	"Car.h"
+
+1597423929 source:z:\cargameprogrammazione\consolesprite.cpp
+	"ConsoleSprite.h"
+
+1597424732 source:z:\cargameprogrammazione\main.cpp
+	"Car.h"
+	"Collectable.h"
+	"LevelManager.h"
+
+1596234194 source:z:\cargameprogrammazione\pixel.cpp
+	"Pixel.h"
+
+1596231433 source:z:\cargameprogrammazione\textwindow.cpp
+	"TextWindow.h"
+
+1596232695 z:\cargameprogrammazione\textwindow.h
+	"Pixel.h"
+
+1597415460 source:z:\cargameprogrammazione\levelmanager.cpp
+	"LevelManager.h"
+
+1597415473 z:\cargameprogrammazione\levelmanager.h
+	"Car.h"
+	"Collectable.h"
+
+1602269959 source:c:\users\asus\desktop\corso informatica\cargameprogrammazione\levelmanager.cpp
+	"LevelManager.h"
+
+1602328126 c:\users\asus\desktop\corso informatica\cargameprogrammazione\levelmanager.h
+	"Car.h"
+	"Collectable.h"
+	<iomanip>
+	<string>
+	<stdlib.h>
+	<time.h>
+
+1602971159 source:c:\documents and settings\ok\desktop\cargameprogrammazione\collectable.cpp
+	"Collectable.h"
+
+1602938907 c:\documents and settings\ok\desktop\cargameprogrammazione\collectable.h
+	"ConsoleSprite.h"
+	"Car.h"
+
+1602978127 source:c:\documents and settings\ok\desktop\cargameprogrammazione\levelmanager.cpp
+	"LevelManager.h"
+
+1602973567 c:\documents and settings\ok\desktop\cargameprogrammazione\levelmanager.h
+	"Car.h"
+	"Collectable.h"
+	<iomanip>
+	<string>
+	<stdlib.h>
+	<time.h>
+
+1603147017 source:c:\documents and settings\ok\desktop\cargameprogrammazione\menu.cpp
+	"Menu.h"
+	<string>
+
+1602974411 c:\documents and settings\ok\desktop\cargameprogrammazione\menu.h
+	"ConsoleSprite.h"
+
+1604014329 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\car.cpp
+	"Car.h"
+
+1604015072 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\car.h
+	"ConsoleSprite.h"
+
+1604020363 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\consolesprite.h
+	<fstream>
+	<string>
+	"Pixel.h"
+
+1604015855 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\pixel.h
+	<conio.h>
+	<windows.h>
+	<iostream>
+
+1604014856 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\collectable.cpp
+	"Collectable.h"
+
+1604015155 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\collectable.h
+	"ConsoleSprite.h"
+	"Car.h"
+
+1604012604 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\consolesprite.cpp
+	"ConsoleSprite.h"
+
+1604021972 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\levelmanager.cpp
+	"LevelManager.h"
+
+1603146290 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\levelmanager.h
+	"Car.h"
+	"Collectable.h"
+	<iomanip>
+	<string>
+	<stdlib.h>
+	<time.h>
+
+1604020229 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\main.cpp
+	"LevelManager.h"
+	"Menu.h"
+
+1602970811 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\menu.h
+	"ConsoleSprite.h"
+
+1604021568 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\menu.cpp
+	"Menu.h"
+	<string>
+
+1602933292 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.0\pixel.cpp
+	"Pixel.h"
+
+1606846430 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\car.cpp
+	"Car.hpp"
+
+1604015072 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\car.h
+	"ConsoleSprite.h"
+
+1604020363 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\consolesprite.h
+	<fstream>
+	<string>
+	"Pixel.h"
+
+1604015855 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\pixel.h
+	<conio.h>
+	<windows.h>
+	<iostream>
+
+1606826749 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\collectable.cpp
+	"Collectable.hpp"
+
+1604015155 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\collectable.h
+	"ConsoleSprite.h"
+	"Car.h"
+
+1606824429 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\consolesprite.cpp
+	"ConsoleSprite.hpp"
+
+1606848693 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\levelmanager.cpp
+	"LevelManager.hpp"
+
+1603146290 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\levelmanager.h
+	"Car.h"
+	"Collectable.h"
+	<iomanip>
+	<string>
+	<stdlib.h>
+	<time.h>
+
+1606824962 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\main.cpp
+	"LevelManager.hpp"
+	"Menu.hpp"
+
+1602970811 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\menu.h
+	"ConsoleSprite.h"
+
+1606045059 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\menu.cpp
+	"Menu.hpp"
+	<string>
+
+1606045059 source:c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\pixel.cpp
+	"Pixel.hpp"
+
+1606848124 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\car.hpp
+	"ConsoleSprite.hpp"
+
+1606045549 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\consolesprite.hpp
+	<fstream>
+	<string>
+	"Pixel.hpp"
+
+1606848884 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\pixel.hpp
+	<conio.h>
+	<windows.h>
+	<iostream>
+
+1606847523 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\collectable.hpp
+	"ConsoleSprite.hpp"
+	"Car.hpp"
+
+1606847593 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\levelmanager.hpp
+	"Car.hpp"
+	"Collectable.hpp"
+	<iomanip>
+	<string>
+	<stdlib.h>
+	<time.h>
+
+1606847782 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\menu.hpp
+	"ConsoleSprite.hpp"
+

@@ -5,7 +5,6 @@ Car::Car()
     carSprite = ConsoleSprite();
     updateCollider();
     speed = 100;
-//va
 }
 
 Car::Car(char* directory, int x, int y)

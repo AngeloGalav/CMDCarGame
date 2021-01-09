@@ -23,10 +23,11 @@ class Collectable
         //Sprite & Collider info (Colliders are just read only versions of squareColliders)
 
         int effect;
-        Collider collider;
+        Collider collider; //perchè public?
         void updateCollider();
         void Collision(HANDLE hConsole);
-
+        void setEffect(int n);
+        int getEffect();
         //used to delete annoying ghosting effect
         void RenderObject(HANDLE hConsole);
         void moveForward(HANDLE hConsole);
@@ -35,7 +36,7 @@ class Collectable
         void checkCollidersDebug(HANDLE hConsole, Car playerCar);
 
         void moveTo(int x, int y);
-
+        
         //debug functions
         void printAddressInfoDebug();
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);

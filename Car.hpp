@@ -33,6 +33,10 @@ class Car
         void printSpriteInfo(HANDLE hConsole);
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
         void printAddressInfoDebug();
+        void setSpeed(int n);
+        int getSpeed();
+        void setAccelerator(bool b);
+        bool getAccelerator();
 
 
 };

@@ -14,6 +14,23 @@ Car::Car(char* directory, int x, int y)
     speed = 100;
 }
 
+void Car::setSpeed(int n)
+{
+    speed = n;
+}
+int Car::getSpeed()
+{
+    return speed;
+}
+void Car::setAccelerator(bool b)
+{
+    acceleratorEnabler = b;
+}
+bool Car::getAccelerator()
+{
+    return acceleratorEnabler;
+}
+
 void Car::Movement(HANDLE hConsole){
 
         carSprite.deleteSprite(hConsole);

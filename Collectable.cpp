@@ -16,6 +16,16 @@ Collectable::Collectable(char* directory, int x, int y, int ef)
     effect = ef;
 }
 
+void Collectable::setEffect(int n)
+{
+    effect = n;
+}
+
+int Collectable::getEffect()
+{
+    return effect;
+}
+
 void Collectable::RenderObject(HANDLE hConsole)
 {
     objectSprite.renderSprite(hConsole);

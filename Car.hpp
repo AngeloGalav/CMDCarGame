@@ -10,8 +10,20 @@
 class Car
 {
     protected:
-        ConsoleSprite carSprite;
+        ConsoleSprite car_sprite;
         void updateCollider();
+        int speed;
+        bool accelerator_enabler;
+
+        //speed limits
+        int speed_limit;
+
+        //confini di dove la macchina si può muovere.
+        int left_wall;
+        int right_wall;
+        int up_wall;
+        int down_wall;
+
 
     public:
         //contructors
@@ -20,8 +32,6 @@ class Car
 
         //function for car movement by keyboard
         void Movement(HANDLE hConsole);
-        int speed;
-        bool acceleratorEnabler;
 
         //functions for rendering
         void RenderObject(HANDLE hConsole);
@@ -29,15 +39,23 @@ class Car
         //generates a square Collider, and can be used to delete annoying ghosting effects
         Collider collider;
 
+        //sets boundaries for car
+        void setBoundaries(int leftWall, int rightWall, int upWall, int downWall);
+
+        //sets speed limit
+        void Car::setSpeedLimit(int speed_limit){
+
+        //speed setter, getter
+        void setSpeed(int n);
+        int getSpeed();
+
+        //acceleration setter
+        void enableAccelerator(bool b);
+
         //debugStuff
         void printSpriteInfo(HANDLE hConsole);
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
         void printAddressInfoDebug();
-        void setSpeed(int n);
-        int getSpeed();
-        void setAccelerator(bool b);
-        bool getAccelerator();
-
 
 };
 

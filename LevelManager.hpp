@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+//TODO: change maxObjectOnScreen to private.
+//TODO: change LevelVelocity by making it IN levelManager and OUTSIDE of the car class
+
 class LevelManager
 {
     protected:

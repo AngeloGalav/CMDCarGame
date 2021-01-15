@@ -1,5 +1,7 @@
 #include "LevelManager.hpp"
 
+//TODO: rework devMode
+
 LevelManager::LevelManager(HANDLE thConsole)
 {
     devMode = false;
@@ -30,7 +32,7 @@ LevelManager::LevelManager(HANDLE thConsole)
     enemyCar = Collectable(filePath[3], 0, 0, -1000);
 
     //enables the abilility to accelerate with E and Q
-    playerCar.acceleratorEnabler = devMode;
+    playerCar.enableAccelerator(devMode);
 
     //u alive when u start :)
     deathBool = false;
@@ -51,7 +53,7 @@ void LevelManager::Start()
     timeToWaitForSpawn = 16;
     time = 0;
 
-    playerCar.acceleratorEnabler = devMode;
+    playerCar.enableAccelerator(devMode);
     pointsUpperBound = 1000;
 
     for(int i=0; i<maxOnScreenObjects; i++)
@@ -161,13 +163,15 @@ void LevelManager::Update()
                 timeToWaitForSpawn += 2;
             }
 
-            if (playerCar.speed + 20 < 120 ) //speed bounds
+            int tmp = playerCar.getSpeed();
+
+            if (tmp + 20 < 120 ) //speed bounds
             {
-                playerCar.speed += 20;
+                playerCar.setSpeed(tmp + 20);
             }
             else
             {
-                playerCar.speed = 120;
+                playerCar.setSpeed(120);
             }
         }
     }
@@ -446,7 +450,7 @@ void LevelManager::UIGameInfo()
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << " SPEED: " << setw(6) << 150 - playerCar.speed << " km/h";
+    cout << " SPEED: " << setw(6) << 150 - playerCar.getSpeed() << " km/h";
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
@@ -457,7 +461,7 @@ void LevelManager::UIGameInfo()
     cout << " Score: " << setw(11) << points;
 
     gotoPos(80,18);
-    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << playerCar.speed << "   ";
+    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << playerCar.getSpeed() << "   ";
 
 }
 

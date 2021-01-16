@@ -62,6 +62,8 @@ void LevelManager::Start()
     UIGameInfoInit();
     playerCar.RenderObject(hConsole);
 
+    playerCar.initPointerCollider();
+
 }
 
 /**
@@ -137,12 +139,15 @@ void LevelManager::Update()
         }
     }
 
-    playerCar.Movement(hConsole);
+    //playerCar.Movement(hConsole);
+
+    playerCar.Movement_debug(hConsole);
+
 
     //collider visualization in devMode for sprites for car
     if (devMode)
     {
-        playerCar.renderColliders(hConsole);
+        playerCar.renderColliders_fromptr(hConsole);
     }
 
     checkColliders();

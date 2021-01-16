@@ -41,7 +41,7 @@ class Pixel
         void setPosition(COORD pos);
 
         void setColor();
-        void setPixChar(WOORD _color);
+        void setPixChar(WORD _color);
 
         //debug functions
         void printPixelInfo();

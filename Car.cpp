@@ -7,12 +7,14 @@ Car::Car()
 {
     car_sprite = ConsoleSprite();
     updateCollider();  //TODO: Controllare se ha senso fare l'update dei collider
+    collider_pointer = &(car_sprite.SquareCollider);
 }
 
 Car::Car(char* directory, int x, int y)
 {
     car_sprite = ConsoleSprite(directory,x,y);
     updateCollider();
+    collider_pointer = &(car_sprite.SquareCollider);
 }
 
 /** Metodo che controlla il movimento della macchina.
@@ -33,12 +35,33 @@ void Car::Movement(HANDLE hConsole){
 
         updateCollider();
         car_sprite.renderSprite(hConsole);
+
+}
+
+void Car::Movement_debug(HANDLE hConsole){
+
+        car_sprite.deleteSprite(hConsole);
+
+        if (GetAsyncKeyState(VK_UP) && collider_pointer->topLine > up_wall) car_sprite.translate(0,-1);
+        else if (GetAsyncKeyState(VK_LEFT) && collider_pointer->leftLine > left_wall ) car_sprite.translate(-1,0);
+        else if (GetAsyncKeyState(VK_RIGHT) && collider_pointer->rightLine < right_wall ) car_sprite.translate(1,0);
+        else if (GetAsyncKeyState(VK_DOWN) && collider_pointer->bottomLine < down_wall) car_sprite.translate(0,1);
+
+        updateCollider();
+        car_sprite.renderSprite(hConsole);
+
 }
 
 //updates colliders after modifications
 void Car::updateCollider()
 {
-    collider = car_sprite.SquareCollider;
+    //collider = car_sprite.SquareCollider;
+   // collider_pointer = &(car_sprite.SquareCollider);
+}
+
+void Car::initPointerCollider()
+{
+    collider_pointer = &(car_sprite.SquareCollider);
 }
 
 //mostra l'oggetto sullo schermo
@@ -62,6 +85,29 @@ void Car::setBoundaries(int leftWall, int rightWall, int upWall, int downWall)
 void Car::renderColliders(HANDLE hConsole)
 {
     car_sprite.renderColliders(hConsole);
+}
+
+void Car::renderColliders_fromptr(HANDLE hConsole)
+{
+    COORD coord;
+
+    SetConsoleTextAttribute(hConsole, 164);
+    coord.X = collider_pointer->leftLine;
+    coord.Y = collider_pointer->topLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+    coord.X = collider_pointer->rightLine;
+    coord.Y = collider_pointer->bottomLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+    coord.X = collider_pointer->leftLine;
+    coord.Y = collider_pointer->bottomLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+    coord.X = collider_pointer->rightLine;
+    coord.Y = collider_pointer->topLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
 }
 
 //debugFunctions

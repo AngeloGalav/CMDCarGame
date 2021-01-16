@@ -108,7 +108,14 @@ void DebugWindow(HANDLE hConsole, Car playerObject, LevelManager level)
     << ", " <<level.availableCollectablesIndexes[3] << ", " << level.collectables[3].objectSprite.screenPosition.X << ", " << level.collectables[3].objectSprite.screenPosition.Y<< "    ";
     */
 
-    cout << "player_col:(" << playerObject.collider.topLine << ", " << playerObject.collider.leftLine  << ")" << ", (" << playerObject.collider.bottomLine << ", " << playerObject.collider.rightLine << ")";
+    cout << "player_col:(" << playerObject.collider.topLine << ", " << playerObject.collider.leftLine  << ")" << ", (" << playerObject.collider.bottomLine << ", "
+     << playerObject.collider.rightLine << ")";
+
+      window_position.Y++;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
+
+     cout << "player_col_ptr:(" << playerObject.collider_pointer->topLine << ", " << playerObject.collider_pointer->leftLine  << ")" << ", (" << playerObject.collider_pointer->bottomLine << ", "
+     << playerObject.collider_pointer->rightLine << ")" ;
 
     window_position.Y += 2;
     //mostra info di ciascun pixel della macchina

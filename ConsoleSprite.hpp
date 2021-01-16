@@ -23,6 +23,7 @@ class ConsoleSprite
         void calculate_RightLeftLine();
         void generateCollider();
         Pixel pixels[32]; //maximum sprite buffer size
+        //Collider SquareCollider;
 
     public:
         //constructors
@@ -30,9 +31,8 @@ class ConsoleSprite
         ConsoleSprite(char* directory, int x, int y);
 
         //collider info
-        Collider SquareCollider;
         COORD screenPosition;
-
+        Collider SquareCollider;
         //position relative to the screen (WORST FUCKING IDEA EVER)
 
         void loadFromFile(char* directory);

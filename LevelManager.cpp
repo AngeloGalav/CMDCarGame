@@ -2,21 +2,13 @@
 
 //TODO: rework devMode
 
+//TODO: rework game_collider disappereance
+
+//TODO: CollisionFunctions
+
 LevelManager::LevelManager(HANDLE thConsole)
 {
-    devMode = false;
-    maxOnScreenObjects = 5;
-    availableObjects = maxOnScreenObjects;
-    onScreenObjects = 0;
-
-    points = 0;
-    levelCounter = 0;
-    levelCounterFloor = 0;
-
-    timeToWaitForSpawn = 16;
-    time = 0;
     hConsole = thConsole;
-    frameAnimationEnvBool = true;
 
     char filePath[5][128];
 
@@ -31,34 +23,38 @@ LevelManager::LevelManager(HANDLE thConsole)
     mud = Collectable(filePath[2], 0, 0, -100);
     enemyCar = Collectable(filePath[3], 0, 0, -1000);
 
-    //enables the abilility to accelerate with E and Q
-    playerCar.enableAccelerator(devMode);
-
-    //u alive when u start :)
-    deathBool = false;
+    playerCar.setBoundaries(11,69,1,42);
 }
 
-
+/**
+    Metodo che viene chiamato all'inizio del gioco.
+*/
 void LevelManager::Start()
 {
     //reinitialization of game values, so that nothing changes when the player restarts
     maxOnScreenObjects = 5;
     availableObjects = maxOnScreenObjects;
     onScreenObjects = 0;
-    playerCar.speed = 100;
 
+    time = 0;
+    isDead = false;
+
+    game_speed = 100;
     points = 0;
     levelCounter = 0;
+    levelCounterFloor = 0;
+    speed_limit = 120;
+    maxTimeToWaitForSpawn = 6;
+    minTimeToWaitForSpawn = 16;
+    timeToWaitForSpawn = minTimeToWaitForSpawn;
 
-    timeToWaitForSpawn = 16;
-    time = 0;
+    frameAnimationEnvBool = true;
 
-    playerCar.enableAccelerator(devMode);
     pointsUpperBound = 1000;
 
     for(int i=0; i<maxOnScreenObjects; i++)
     {
-        availableCollectablesIndexes[i] = true;
+        availableCollectablesIndices[i] = true;
     }
 
     drawBackground();
@@ -68,9 +64,12 @@ void LevelManager::Start()
 
 }
 
+/**
+    Metodo che si ripete ad ogni frame.
+*/
 void LevelManager::Update()
 {
-    Sleep(playerCar.speed);
+    Sleep(game_speed);
 
     UIGameInfo();
 
@@ -91,7 +90,7 @@ void LevelManager::Update()
 
         for(int i=0; i<maxOnScreenObjects; i++)
         {
-           if (!availableCollectablesIndexes[i]){
+           if (!availableCollectablesIndices[i]){
 
                 //sprite collider image clearance
                 gotoPos(collectables[i].collider.leftLine, collectables[i].collider.topLine);
@@ -106,10 +105,65 @@ void LevelManager::Update()
         }
     }
 
-    //aggiunto letteralmente solo perche ci dava fastidio vedere 129 e non 130 per velocita
-    if (playerCar.speed == 21)
+    if (devMode)
     {
-        playerCar.speed = 20;
+        manualAccelerator();
+    }
+
+    playerGameMechanics();
+
+    time++;
+
+    //renders the background animaiton
+    enviromentAnimationRenderer();
+
+    if (time >= timeToWaitForSpawn && availableObjects > 0){
+        Spawn();
+        time = 0;
+    }
+
+    for(int i=0; i<maxOnScreenObjects; i++)
+    {
+        if (!availableCollectablesIndices[i])
+        {
+
+            collectables[i].moveForward(hConsole);
+
+            //collider visualization in devMode for sprites
+            if (devMode)
+            {
+                collectables[i].renderColliders(hConsole);
+            }
+        }
+    }
+
+    playerCar.Movement(hConsole);
+
+    //collider visualization in devMode for sprites for car
+    if (devMode)
+    {
+        playerCar.renderColliders(hConsole);
+    }
+
+    checkColliders();
+
+    //eliminates annoying ghosting effect
+    playerCar.RenderObject(hConsole); //TODO: DELETE GHOSTING
+}
+
+/**
+    Funzione che crea e aggiorna le meccaniche di gioco, in particolare si occupa di aumentare il livello,
+    la difficoltà, etc.. (oppure di diminuirli).
+
+*/
+
+void LevelManager::playerGameMechanics()
+{
+    //aggiunto letteralmente solo perche ci dava fastidio vedere 129 e non 130 per velocita
+    //TODO: Game_speed adjustment.
+    if (game_speed == 21)
+    {
+        game_speed = 20;
     }
 
     if (points >= pointsUpperBound) //next level
@@ -118,20 +172,21 @@ void LevelManager::Update()
         points -= pointsUpperBound;
         levelCounter++;
 
-        if (timeToWaitForSpawn > 6){
+        if (timeToWaitForSpawn > maxTimeToWaitForSpawn){
             timeToWaitForSpawn -= 2;
         }
 
-        if (playerCar.speed - 20 > 0 && !devMode) //speedbounds
+        if (game_speed - 20 > 0 && !devMode) //speedbounds
         {
-            playerCar.speed -= 20;
+            game_speed -= 20;
         }
         else
         {
-            playerCar.speed = 1;
+            game_speed = 1;
         }
 
-        if (timeToWaitForSpawn <= 6 && playerCar.speed <= 1){ //punto in cui la difficoltà finisce di aumentare
+        if (timeToWaitForSpawn <= maxTimeToWaitForSpawn && game_speed <= 1)
+        { //punto in cui la difficoltà finisce di aumentare
             levelCounterFloor++;
         }
     }
@@ -147,7 +202,7 @@ void LevelManager::Update()
         }
         else if (!devMode) //se il livello torna a 0, allora muori se points < 0
         {
-            deathBool = true;
+            isDead = true;
         }
 
         if (levelCounterFloor > 1)
@@ -158,89 +213,45 @@ void LevelManager::Update()
         else
         {    //posso abbassare la difficoltà solo se il livello
 
-            if (timeToWaitForSpawn < 16)
+            if (timeToWaitForSpawn < minTimeToWaitForSpawn)
             {
                 timeToWaitForSpawn += 2;
             }
 
-            int tmp = playerCar.getSpeed();
-
-            if (tmp + 20 < 120 ) //speed bounds
+            if (game_speed + 20 < speed_limit ) //speed bounds
             {
-                playerCar.setSpeed(tmp + 20);
+                game_speed += 20;
             }
             else
             {
-                playerCar.setSpeed(120);
+                game_speed = speed_limit;
             }
         }
     }
-
-    time++;
-    //renders the background animaiton
-    enviromentAnimationRenderer();
-
-    if (time >= timeToWaitForSpawn && availableObjects > 0){
-        Spawn();
-        time = 0;
-    }
-
-
-    //dcheckColliders();
-    //playerCar.Movement(hConsole);
-
-    for(int i=0; i<maxOnScreenObjects; i++)
-    {
-        if (!availableCollectablesIndexes[i])
-        {
-
-            collectables[i].moveForward(hConsole);
-
-            //collider visualization in devMode for sprites
-            if (devMode)
-            {
-                SetConsoleTextAttribute(hConsole, 172);
-                gotoPos(collectables[i].collider.leftLine, collectables[i].collider.topLine);
-                cout << "o";
-                gotoPos(collectables[i].collider.rightLine, collectables[i].collider.bottomLine);
-                cout << "o";
-                gotoPos(collectables[i].collider.leftLine, collectables[i].collider.bottomLine);
-                cout << "o";
-                gotoPos(collectables[i].collider.rightLine, collectables[i].collider.topLine);
-                cout << "o";
-            }
-        }
-    }
-
-    playerCar.Movement(hConsole);
-
-    //collider visualization in devMode for sprites for cars
-    if (devMode)
-    {
-        SetConsoleTextAttribute(hConsole, 164);
-        gotoPos(playerCar.collider.leftLine, playerCar.collider.topLine);
-        cout << "o";
-        gotoPos(playerCar.collider.rightLine, playerCar.collider.bottomLine);
-        cout << "o";
-        gotoPos(playerCar.collider.leftLine, playerCar.collider.bottomLine);
-        cout << "o";
-        gotoPos(playerCar.collider.rightLine, playerCar.collider.topLine);
-        cout << "o";
-    }
-
-    checkColliders();
-
-    //eliminates annoying ghosting effect
-    playerCar.RenderObject(hConsole);
 }
 
+/**
+    Funzione che abilita l'accelerazione manuale, usata in devMode.
+*/
+void LevelManager::manualAccelerator()
+{
+    if (GetAsyncKeyState(81) && game_speed < 125 && devMode) game_speed++; //81 e 69 sono i keycode di E e Q rispettivamente.
+    else if (GetAsyncKeyState(69) && game_speed > 1 && devMode) game_speed--;
+}
+
+
+/**
+    Funzione che controlla i collider di ciascun oggetto nel gioco, per vedere se sbatte contro la macchina.
+
+    Se ho una collisione, passo il controllo a CollisionHandler
+*/
 void LevelManager::checkColliders()
 {
 
     for(int i=0; i<maxOnScreenObjects; i++)
     {
         //check elements that are on screen
-        if (!availableCollectablesIndexes[i]){
+        if (!availableCollectablesIndices[i]){
 
             //element got hit by car
 
@@ -254,7 +265,7 @@ void LevelManager::checkColliders()
                     || (collectables[i].collider.rightLine >=  playerCar.collider.leftLine && collectables[i].collider.rightLine <=  playerCar.collider.rightLine)
                     || (collectables[i].collider.leftLine >=  playerCar.collider.leftLine && collectables[i].collider.leftLine <=  playerCar.collider.rightLine))
                 {
-                    CollisionHandle(i);
+                    CollisionHandler(i);
                     points += collectables[i].effect;
                 }
             }
@@ -262,12 +273,21 @@ void LevelManager::checkColliders()
             //element goes offscreen
             if (collectables[i].collider.bottomLine >= 43 && collectables[i].collider.bottomLine < 998)
             {
-                CollisionHandle(i);
+                CollisionHandler(i);
             }
 
         }
     }
 }
+
+/**
+    Funzione che spawna un oggetto in posizione random dalla parte più alta del framebuffer.
+
+    Per funzionare, guarda se c'è un posto libero fra i collectables di gioco e poi gli viene così assegnato un
+    ID (l'indice del availableCollectablesIndixes).
+
+    Dopodiché, viene renderizzato.
+*/
 
 void LevelManager::Spawn()
 {
@@ -280,18 +300,19 @@ void LevelManager::Spawn()
     //find the first available space (true if available, false if not)
     while  (j < maxOnScreenObjects)
     {
-        if (availableCollectablesIndexes[j])
+        if (availableCollectablesIndices[j])
         {
-            k=j;
-            availableCollectablesIndexes[j] = false;//the cell is now unavailable (because it's used)
-            j=maxOnScreenObjects; //a way out of the loop without using break
+
+            k = j; //k è l'id che scelgo
+            availableCollectablesIndices[j] = false;    //la cella ora non è più disponibile (perché presa)
+            j = maxOnScreenObjects; //Uscita da loop senza break
         }
 
         j++;
     }
 
     //se dopo tutti questi passaggi, k è != -1 (quindi si è trovato un posto libero) finalizza lo spawn
-    if (k!=-1)
+    if (k != -1)
     {
         if (randomValue == 0){
             collectables[k] = oil;
@@ -311,15 +332,20 @@ void LevelManager::Spawn()
         onScreenObjects++;
 
         //its ALIVEEE!
+        //Posso renderizzare l'oggetto.
         collectables[k].RenderObject(hConsole);
     }
 
 }
 
+/**
+    Elimina l'elemento i nel piano di gioco che ha subito una collisione.
+*/
+
 //funzione chiamata ogni volta che avviene una collisione
-void LevelManager::CollisionHandle(int i)
+void LevelManager::CollisionHandler(int i)
 {
-    //deletes the sprite of the collider which is shown during devMode
+    //elimina l'immagine del collider (i quattro punti ai vertici) se in devMode quando avviene una collisione...
     if (devMode)
     {
         SetConsoleTextAttribute(hConsole, 7);
@@ -334,16 +360,22 @@ void LevelManager::CollisionHandle(int i)
     }
 
     collectables[i].Collision(hConsole);
-    availableCollectablesIndexes[i] = true;
+
+    //libera lo spazio in i
+    availableCollectablesIndices[i] = true;
+
+    //update dei dati di gioco
     availableObjects++;
     onScreenObjects--;
-
 }
 
 
 
 //////FUNCTIONS FOR LEVEL AESTETIC//////
 
+/**
+    Posiziona il cursore del renderer nelle coordinate x e y.
+*/
 void LevelManager::gotoPos(int x, int y)
 {
     COORD coord;
@@ -355,30 +387,33 @@ void LevelManager::gotoPos(int x, int y)
     SetConsoleCursorPosition(hConsole, coord);
 }
 
-
+/**
+    Crea la animazione ai bordi della strada e nella riga
+    di mezzeria, dando un senso di velocità al gioco.
+*/
 void LevelManager::enviromentAnimationRenderer()
 {
     if (frameAnimationEnvBool){
-        for (int j=0; j<43; j++)
+        for (int j = 0; j < 43; j++)
         {
             gotoPos(10,j);
-            if (j%2==0){
+            if (j % 2 == 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
-            } else if (j%2!=0){
+            } else if (j % 2 != 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
             }
             cout << ' ';
             gotoPos(40,j);
             SetConsoleTextAttribute(hConsole, 7);
-            if (j%2==0){
+            if (j % 2 == 0){
                 cout << '|';
-            } else if (j%2!=0){
+            } else if (j % 2 != 0){
                 cout << ' ';
             }
             gotoPos(70,j);
-            if (j%2==0){
+            if (j % 2 == 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
-            } else if (j%2!=0){
+            } else if (j % 2 != 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
             }
             cout << ' ';
@@ -386,26 +421,26 @@ void LevelManager::enviromentAnimationRenderer()
     }
     else
     {
-        for (int j=0; j<43; j++)
+        for (int j = 0; j < 43; j++)
         {
             gotoPos(10,j);
-            if (j%2==0){
+            if (j%2 == 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
-            } else if (j%2!=0){
+            } else if (j%2 != 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
             }
             cout << ' ';
             gotoPos(40,j);
             SetConsoleTextAttribute(hConsole, 7);
-            if (j%2!=0){
+            if (j % 2 != 0){
                 cout << '|';
-            } else if (j%2==0){
+            } else if (j % 2 == 0){
                 cout << ' ';
             }
             gotoPos(70,j);
-            if (j%2==0){
+            if (j % 2 == 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
-            } else if (j%2!=0){
+            } else if (j % 2 != 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
             }
             cout << ' ';
@@ -414,6 +449,9 @@ void LevelManager::enviromentAnimationRenderer()
     frameAnimationEnvBool = !frameAnimationEnvBool;
 }
 
+/**
+  Stampa lo sfondo verde del gioco.
+*/
 void LevelManager::drawBackground()
 {
     for (int i=0; i<113; i++){
@@ -434,8 +472,11 @@ void LevelManager::drawBackground()
 
 }
 
-
 //UI elements
+
+/**
+    Aggiorna e posiziona la UI del gioco, contente le varie informazioni.
+*/
 
 void LevelManager::UIGameInfo()
 {
@@ -450,7 +491,7 @@ void LevelManager::UIGameInfo()
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << " SPEED: " << setw(6) << 150 - playerCar.getSpeed() << " km/h";
+    cout << " SPEED: " << setw(6) << 150 - game_speed << " km/h";
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
@@ -461,10 +502,14 @@ void LevelManager::UIGameInfo()
     cout << " Score: " << setw(11) << points;
 
     gotoPos(80,18);
-    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << playerCar.getSpeed() << "   ";
+    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << "   ";
 
 }
 
+/**
+    Inizializza la UI, creando il quadrato nero delle informazioni
+    sul gioco, e stampando "Good Luck!".
+*/
 void LevelManager::UIGameInfoInit()
 {
     int j = 10;
@@ -481,4 +526,19 @@ void LevelManager::UIGameInfoInit()
     //85
     gotoPos(85,j-2);
     cout << "Good Luck!";
+}
+
+bool LevelManager::isPlayerDead()
+{
+    return isDead;
+}
+
+//DEBUG FUNCTIONS
+
+/**
+    Getter della velocità di gioco. Usato per debugging.
+*/
+int LevelManager::getGameSpeed()
+{
+    return game_speed;
 }

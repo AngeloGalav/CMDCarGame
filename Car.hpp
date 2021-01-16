@@ -12,11 +12,7 @@ class Car
     protected:
         ConsoleSprite car_sprite;
         void updateCollider();
-        int speed;
         bool accelerator_enabler;
-
-        //speed limits
-        int speed_limit;
 
         //confini di dove la macchina si può muovere.
         int left_wall;
@@ -42,17 +38,8 @@ class Car
         //sets boundaries for car
         void setBoundaries(int leftWall, int rightWall, int upWall, int downWall);
 
-        //sets speed limit
-        void Car::setSpeedLimit(int speed_limit){
-
-        //speed setter, getter
-        void setSpeed(int n);
-        int getSpeed();
-
-        //acceleration setter
-        void enableAccelerator(bool b);
-
         //debugStuff
+        void renderColliders(HANDLE hConsole);
         void printSpriteInfo(HANDLE hConsole);
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
         void printAddressInfoDebug();

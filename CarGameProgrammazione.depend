@@ -293,10 +293,10 @@
 1606847782 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\menu.hpp
 	"ConsoleSprite.hpp"
 
-1606848693 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.cpp
+1610756326 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.cpp
 	"LevelManager.hpp"
 
-1606847593 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.hpp
+1610756118 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.hpp
 	"Car.hpp"
 	"Collectable.hpp"
 	<iomanip>
@@ -304,10 +304,10 @@
 	<stdlib.h>
 	<time.h>
 
-1610664741 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.hpp
+1610755917 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.hpp
 	"ConsoleSprite.hpp"
 
-1606045549 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.hpp
+1610754917 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.hpp
 	<fstream>
 	<string>
 	"Pixel.hpp"
@@ -317,11 +317,11 @@
 	<windows.h>
 	<iostream>
 
-1610664741 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.hpp
+1610754733 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.hpp
 	"ConsoleSprite.hpp"
 	"Car.hpp"
 
-1606824962 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\main.cpp
+1610755312 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\main.cpp
 	"LevelManager.hpp"
 	"Menu.hpp"
 
@@ -334,4 +334,13 @@
 
 1606045059 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\pixel.cpp
 	"Pixel.hpp"
+
+1610757100 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.cpp
+	"Collectable.hpp"
+
+1610756763 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.cpp
+	"ConsoleSprite.hpp"
+
+1610757062 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.cpp
+	"Car.hpp"
 

@@ -11,7 +11,7 @@ class Collectable
 {
     protected:
         //stop boolean for stopping the object after collision
-        ConsoleSprite objectSprite;
+        ConsoleSprite object_sprite;
         bool stop;
 
     public:
@@ -36,8 +36,9 @@ class Collectable
         void checkCollidersDebug(HANDLE hConsole, Car playerCar);
 
         void moveTo(int x, int y);
-        
+
         //debug functions
+        void renderColliders(HANDLE hConsole);
         void printAddressInfoDebug();
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
         void checkCollidersDebug(HANDLE hConsole);

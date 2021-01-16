@@ -38,9 +38,20 @@ class LevelManager
         //handle of console window
         HANDLE hConsole;
 
-        void CollisionHandle(int i);
-
+        //game parameters
+        int game_speed;
         int points;
+        int speed_limit;
+        int maxTimeToWaitForSpawn;
+        int minTimeToWaitForSpawn;
+        int speed_decrementer;
+
+        //Game mechanics functions
+        void CollisionHandler(int i);
+        void Spawn();
+        void checkColliders(); //program events
+        void manualAccelerator();
+        void playerGameMechanics();
 
 
     public:
@@ -52,13 +63,15 @@ class LevelManager
 
         //the index of the level
         Collectable collectables[20]; //objects on screen;
-        bool availableCollectablesIndexes[20]; //available ""spaces"" on screen
+        bool availableCollectablesIndices[20]; //available ""spaces"" on screen
 
         //devMode enabled or not.
         bool devMode;
 
         //deathBool
-        bool deathBool;
+        bool isDead;
+        //getter di death_bool
+        bool isPlayerDead();
 
         //types of collectables
         Collectable oil;
@@ -71,10 +84,9 @@ class LevelManager
         //game behaviour methods
         void Start();
         void Update();
-        void Spawn();
 
-        //collision physics handler
-        void checkColliders(); //program events
+        //debug functions
+        int getGameSpeed();
 
 };
 #endif // LEVELMANAGER_HPP

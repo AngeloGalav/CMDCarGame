@@ -32,6 +32,17 @@ class Pixel
         void RenderPixel(HANDLE hConsole);
         void BlankPixel(HANDLE hConsole, COORD previousCursor);
 
+
+        //setter and getter
+        void setX(SHORT x);
+        void setY(SHORT y);
+
+        SHORT getPosition();
+        void setPosition(COORD pos);
+
+        void setColor();
+        void setPixChar(WOORD _color);
+
         //debug functions
         void printPixelInfo();
 };

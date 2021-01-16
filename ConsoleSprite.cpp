@@ -174,8 +174,8 @@ void ConsoleSprite::moveTo(int x, int y)
     screenPosition.Y = y;
 
     //collider fix/update
-    SquareCollider.bottomLine += yVariation + 1; //(+1 perche comincia da 0)
-    SquareCollider.topLine += yVariation + 1;
+    SquareCollider.bottomLine += yVariation; //(+1 perche comincia da 0)
+    SquareCollider.topLine += yVariation;
     SquareCollider.leftLine += xVariation;
     SquareCollider.rightLine += xVariation;
 
@@ -220,6 +220,33 @@ void ConsoleSprite::calculate_RightLeftLine()
     SquareCollider.rightLine = pixels[mx].position.X;
     SquareCollider.leftLine = pixels[mn].position.X;
 }
+
+/**
+    Funzione usata per renderizzare i collider di ciascuno sprite su schermo.
+*/
+void ConsoleSprite::renderColliders(HANDLE hConsole)
+{
+    COORD coord;
+
+    SetConsoleTextAttribute(hConsole, 164);
+    coord.X = SquareCollider.leftLine;
+    coord.Y = SquareCollider.topLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+    coord.X = SquareCollider.rightLine;
+    coord.Y = SquareCollider.bottomLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+    coord.X = SquareCollider.leftLine;
+    coord.Y = SquareCollider.bottomLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+    coord.X = SquareCollider.rightLine;
+    coord.Y = SquareCollider.topLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << "o";
+}
+
 
 /**
     DEBUG STUFF

@@ -44,6 +44,7 @@ class ConsoleSprite
 
 
         //debugStuff
+        void renderColliders(HANDLE hConsole);
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
         void printAddressDebug();
 

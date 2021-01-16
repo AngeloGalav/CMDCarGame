@@ -3,6 +3,8 @@
 
 COORD current_cursor;
 
+//TODO: Check if updateCollider() does something or is useless by using devMode
+
 void Play(HANDLE hConsole, LevelManager levelManger, Menu mainMenu);
 void hidecursor();
 void DebugWindow(HANDLE hConsole, Car playerObject, LevelManager level);
@@ -50,7 +52,7 @@ void Play(HANDLE hConsole, LevelManager levelManager, Menu mainMenu)
             DebugWindow(hConsole, levelManager.playerCar, levelManager); //then show debug info
         }
 
-        if (levelManager.deathBool || GetAsyncKeyState(VK_ESCAPE) !=0)
+        if (levelManager.isPlayerDead() || GetAsyncKeyState(VK_ESCAPE) !=0)
         {
             mainMenu.GameOverMenu();
             if (mainMenu.exit) //mainMenu exit bool segnala quando uscire dal loop
@@ -58,7 +60,6 @@ void Play(HANDLE hConsole, LevelManager levelManager, Menu mainMenu)
                 stop = true;
             } else
             {
-                levelManager.deathBool = false;
                 levelManager.Start();
             }
         }

@@ -4,7 +4,6 @@
 #include <string>
 #include "Pixel.hpp"
 
-//to understand how this collider works, imagine 4 line that go from end of the screen to the other. The collider looks like a tic-tac-toe grid
 struct Collider
 {
     SHORT rightLine; //i'll save only the y coordinates of these, since the x value is the same for both
@@ -21,32 +20,38 @@ class ConsoleSprite
     private:
         int pixelCount;
         void calculate_RightLeftLine();
+        Pixel pixels[32];   //32 is the maximum sprite buffer size
+        void loadFromFile(char* directory);
+
+    protected:
+        COORD screenPosition;
         void generateCollider();
-        Pixel pixels[32]; //maximum sprite buffer size
-        //Collider SquareCollider;
+        Collider rect_collider;
+        HANDLE object_hConsole;
+        void translate(int x, int y);
 
     public:
         //constructors
         ConsoleSprite();
         ConsoleSprite(char* directory, int x, int y);
+        void setConsoleHandle(HANDLE hConsole);
 
-        //collider info
-        COORD screenPosition;
-        Collider SquareCollider;
-        //position relative to the screen (WORST FUCKING IDEA EVER)
-
-        void loadFromFile(char* directory);
         void renderSprite(HANDLE hConsole);
         void deleteSprite(HANDLE hConsole);
 
-        void translate(int x, int y);
-        void moveTo(int x, int y);
+        Collider* getCollider_ptr();
+        bool checkCollision(Collider* to_check);
 
+        COORD getPosition();
+
+        void moveTo(int x, int y);
 
         //debugStuff
         void renderColliders(HANDLE hConsole);
+        void deleteCollider_render(HANDLE hConsole);
         COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
         void printAddressDebug();
+        void printSpritePosition();
 
 };
 

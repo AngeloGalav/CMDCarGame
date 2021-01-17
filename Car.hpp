@@ -2,26 +2,14 @@
 #define CAR_HPP
 #include "ConsoleSprite.hpp"
 
-/**
-    TODO:
-    -> GET-SET DI PLAYER CAR SPEED E ACCELERATOR ENABLER
-    -> add deleteCollider functions
-    -> elimina flickering
-*/
-
-class Car
+class Car : public ConsoleSprite
 {
     protected:
-        ConsoleSprite car_sprite;
-        void updateCollider();
-        bool accelerator_enabler;
-
         //confini di dove la macchina si può muovere.
         int left_wall;
         int right_wall;
         int up_wall;
         int down_wall;
-
 
     public:
         //contructors
@@ -30,27 +18,9 @@ class Car
 
         //function for car movement by keyboard
         void Movement(HANDLE hConsole);
-        void Movement_debug(HANDLE hConsole);
-
-        //functions for rendering
-        void RenderObject(HANDLE hConsole);
-
-        //generates a square Collider, and can be used to delete annoying ghosting effects
-        Collider collider;
-        Collider* collider_pointer;
 
         //sets boundaries for car
         void setBoundaries(int leftWall, int rightWall, int upWall, int downWall);
-
-        void initPointerCollider();
-        void renderColliders_fromptr(HANDLE hConsole);
-
-
-        //debugStuff
-        void renderColliders(HANDLE hConsole);
-        void printSpriteInfo(HANDLE hConsole);
-        COORD printSinglePixelInfo(HANDLE hConsole, COORD windowCursor);
-        void printAddressInfoDebug();
 
 };
 

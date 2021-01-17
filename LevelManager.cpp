@@ -1,10 +1,8 @@
 #include "LevelManager.hpp"
 
-//TODO: rework devMode
-
-//TODO: rework game_collider disappereance
-
-//TODO: CollisionFunctions
+//toDO: hConsole trimming.
+//todo: levelProgression bug.
+//TODO: levelMax setting.
 
 LevelManager::LevelManager(HANDLE thConsole)
 {
@@ -22,8 +20,6 @@ LevelManager::LevelManager(HANDLE thConsole)
     oil = Collectable(filePath[1], 0, 0, 300);
     mud = Collectable(filePath[2], 0, 0, -100);
     enemyCar = Collectable(filePath[3], 0, 0, -1000);
-
-    playerCar.setBoundaries(11,69,1,42);
 }
 
 /**
@@ -41,16 +37,19 @@ void LevelManager::Start()
 
     game_speed = 100;
     points = 0;
-    levelCounter = 0;
+    levelCounter = 1;
     levelCounterFloor = 0;
     speed_limit = 120;
     maxTimeToWaitForSpawn = 6;
     minTimeToWaitForSpawn = 16;
     timeToWaitForSpawn = minTimeToWaitForSpawn;
+    maxLevel = 8;
 
     frameAnimationEnvBool = true;
 
     pointsUpperBound = 1000;
+
+    playerCar.setBoundaries(11,69,1,42);
 
     for(int i=0; i<maxOnScreenObjects; i++)
     {
@@ -60,10 +59,7 @@ void LevelManager::Start()
     drawBackground();
 
     UIGameInfoInit();
-    playerCar.RenderObject(hConsole);
-
-    playerCar.initPointerCollider();
-
+    playerCar.renderSprite(hConsole);
 }
 
 /**
@@ -75,34 +71,20 @@ void LevelManager::Update()
 
     UIGameInfo();
 
+    playerCar.renderSprite(hConsole);
+
     //code for collider visualization in DevMode (in this case, we set cancel the previus "collider image")
     if (devMode)
     {
-        //we dont need to set an attribute, since it's already set to black by UIGameInfo();
         //car collider image clearance
-
-        gotoPos(playerCar.collider.leftLine, playerCar.collider.topLine);
-        cout << " ";
-        gotoPos(playerCar.collider.rightLine, playerCar.collider.bottomLine);
-        cout << " ";
-        gotoPos(playerCar.collider.leftLine, playerCar.collider.bottomLine);
-        cout << " ";
-        gotoPos(playerCar.collider.rightLine, playerCar.collider.topLine);
-        cout << " ";
+        playerCar.deleteCollider_render(hConsole);
 
         for(int i=0; i<maxOnScreenObjects; i++)
         {
-           if (!availableCollectablesIndices[i]){
+            //ogni slot che non è disponibile è occupato.
+            if (!availableCollectablesIndices[i]){
 
-                //sprite collider image clearance
-                gotoPos(collectables[i].collider.leftLine, collectables[i].collider.topLine);
-                cout << " ";
-                gotoPos(collectables[i].collider.rightLine, collectables[i].collider.bottomLine);
-                cout << " ";
-                gotoPos(collectables[i].collider.leftLine, collectables[i].collider.bottomLine);
-                cout << " ";
-                gotoPos(collectables[i].collider.rightLine, collectables[i].collider.topLine);
-                cout << " ";
+                collectables[i].deleteCollider_render(hConsole);
             }
         }
     }
@@ -139,21 +121,19 @@ void LevelManager::Update()
         }
     }
 
-    //playerCar.Movement(hConsole);
-
-    playerCar.Movement_debug(hConsole);
+    playerCar.Movement(hConsole);
 
 
     //collider visualization in devMode for sprites for car
     if (devMode)
     {
-        playerCar.renderColliders_fromptr(hConsole);
+        playerCar.renderColliders(hConsole);
     }
 
     checkColliders();
 
     //eliminates annoying ghosting effect
-    playerCar.RenderObject(hConsole); //TODO: DELETE GHOSTING
+    playerCar.renderSprite(hConsole); //TODO: DELETE GHOSTING
 }
 
 /**
@@ -178,7 +158,7 @@ void LevelManager::playerGameMechanics()
         levelCounter++;
 
         if (timeToWaitForSpawn > maxTimeToWaitForSpawn){
-            timeToWaitForSpawn -= 2;
+            timeToWaitForSpawn--;
         }
 
         if (game_speed - 20 > 0 && !devMode) //speedbounds
@@ -220,7 +200,7 @@ void LevelManager::playerGameMechanics()
 
             if (timeToWaitForSpawn < minTimeToWaitForSpawn)
             {
-                timeToWaitForSpawn += 2;
+                timeToWaitForSpawn++;
             }
 
             if (game_speed + 20 < speed_limit ) //speed bounds
@@ -247,6 +227,7 @@ void LevelManager::manualAccelerator()
 
 /**
     Funzione che controlla i collider di ciascun oggetto nel gioco, per vedere se sbatte contro la macchina.
+    E' lento, ma è anche il metodo più preciso per registrare le collisioni.
 
     Se ho una collisione, passo il controllo a CollisionHandler
 */
@@ -259,24 +240,18 @@ void LevelManager::checkColliders()
         if (!availableCollectablesIndices[i]){
 
             //element got hit by car
+            Collider* col_ptr = collectables[i].getCollider_ptr();
 
-            //the collision detection tests are made taking count of how the coordinates of the screen work (from 0 to x from left to right, from 0 to y from top to bottom)
-            if ((playerCar.collider.topLine <= collectables[i].collider.bottomLine && playerCar.collider.topLine >= collectables[i].collider.topLine)
-                || (playerCar.collider.bottomLine <= collectables[i].collider.bottomLine && playerCar.collider.bottomLine >= collectables[i].collider.topLine))
-                {
-                if ((playerCar.collider.leftLine >= collectables[i].collider.leftLine && playerCar.collider.leftLine <= collectables[i].collider.rightLine)
-                    || (playerCar.collider.rightLine <= collectables[i].collider.rightLine && playerCar.collider.rightLine >= collectables[i].collider.leftLine)
-                    //test in piu aggiunto nel caso l'oggetto sia piu piccolo della macchinina
-                    || (collectables[i].collider.rightLine >=  playerCar.collider.leftLine && collectables[i].collider.rightLine <=  playerCar.collider.rightLine)
-                    || (collectables[i].collider.leftLine >=  playerCar.collider.leftLine && collectables[i].collider.leftLine <=  playerCar.collider.rightLine))
+            if (playerCar.checkCollision(col_ptr))
+            {
                 {
                     CollisionHandler(i);
-                    points += collectables[i].effect;
+                    points += collectables[i].getEffect();
                 }
             }
 
             //element goes offscreen
-            if (collectables[i].collider.bottomLine >= 43 && collectables[i].collider.bottomLine < 998)
+            if (col_ptr->bottomLine >= 43 && col_ptr->bottomLine < 998)
             {
                 CollisionHandler(i);
             }
@@ -329,16 +304,15 @@ void LevelManager::Spawn()
             collectables[k] = enemyCar;
         }
 
-
         randomValue = rand() % 54 + 11;
-        collectables[k].moveTo(randomValue, 1);
+        collectables[k].moveTo(randomValue, 1); //possibile seg fault?
 
         availableObjects--;
         onScreenObjects++;
 
         //its ALIVEEE!
         //Posso renderizzare l'oggetto.
-        collectables[k].RenderObject(hConsole);
+        collectables[k].renderSprite(hConsole);
     }
 
 }
@@ -353,15 +327,7 @@ void LevelManager::CollisionHandler(int i)
     //elimina l'immagine del collider (i quattro punti ai vertici) se in devMode quando avviene una collisione...
     if (devMode)
     {
-        SetConsoleTextAttribute(hConsole, 7);
-        gotoPos(collectables[i].collider.leftLine, collectables[i].collider.topLine);
-        cout << " ";
-        gotoPos(collectables[i].collider.rightLine, collectables[i].collider.bottomLine);
-        cout << " ";
-        gotoPos(collectables[i].collider.leftLine, collectables[i].collider.bottomLine);
-        cout << " ";
-        gotoPos(collectables[i].collider.rightLine, collectables[i].collider.topLine);
-        cout << " ";
+        collectables[i].deleteCollider_render(hConsole);
     }
 
     collectables[i].Collision(hConsole);
@@ -539,7 +505,6 @@ bool LevelManager::isPlayerDead()
 }
 
 //DEBUG FUNCTIONS
-
 /**
     Getter della velocità di gioco. Usato per debugging.
 */

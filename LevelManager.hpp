@@ -45,6 +45,7 @@ class LevelManager
         int maxTimeToWaitForSpawn;
         int minTimeToWaitForSpawn;
         int speed_decrementer;
+        int maxLevel;
 
         //Game mechanics functions
         void CollisionHandler(int i);

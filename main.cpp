@@ -82,48 +82,30 @@ void DebugWindow(HANDLE hConsole, Car playerObject, LevelManager level)
 {
     COORD window_position;
     window_position.X = 80;
-    window_position.Y = 18;
+    window_position.Y = 20;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
     SetConsoleTextAttribute(hConsole, 14);
 
-
-    /*
-    //mostra info di 4 elementi raccoglibili su schermo
-    //tra le info mostrate: posizione e colliders
-
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << level.collectables[0].collider.bottomLine << ", " << level.collectables[0].collider.topLine << ", " <<level.collectables[0].collider.rightLine << ", " <<level.collectables[0].collider.leftLine
-    << ", " << level.availableCollectablesIndexes[0] << ", " << level.collectables[0].objectSprite.screenPosition.X << ", " << level.collectables[0].objectSprite.screenPosition.Y << "    ";
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << level.collectables[1].collider.bottomLine << ", " << level.collectables[1].collider.topLine << ", " <<level.collectables[1].collider.rightLine << ", " <<level.collectables[1].collider.leftLine
-    << ", " <<level.availableCollectablesIndexes[1] << ", " << level.collectables[1].objectSprite.screenPosition.X << ", " << level.collectables[1].objectSprite.screenPosition.Y<< "    ";
+
+     cout << "player_position: ";
+    playerObject.printSpritePosition();
+
+
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << level.collectables[2].collider.bottomLine << ", " << level.collectables[2].collider.topLine << ", " <<level.collectables[2].collider.rightLine << ", " <<level.collectables[2].collider.leftLine
-    << ", " <<level.availableCollectablesIndexes[2] << ", " << level.collectables[2].objectSprite.screenPosition.X << ", " << level.collectables[2].objectSprite.screenPosition.Y<< "    ";
+
+    Collider* Collider_ptr;
+    Collider_ptr = playerObject.getCollider_ptr();
+
+    cout << "player_col:(" << Collider_ptr->topLine << ", " << Collider_ptr->leftLine  << ")" << ", (" << Collider_ptr->bottomLine << ", "
+    << Collider_ptr->rightLine << ")";
+
+
     window_position.Y++;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << level.collectables[3].collider.bottomLine << ", " << level.collectables[3].collider.topLine << ", " <<level.collectables[3].collider.rightLine << ", " <<level.collectables[3].collider.leftLine
-    << ", " <<level.availableCollectablesIndexes[3] << ", " << level.collectables[3].objectSprite.screenPosition.X << ", " << level.collectables[3].objectSprite.screenPosition.Y<< "    ";
-    */
-
-    cout << "player_col:(" << playerObject.collider.topLine << ", " << playerObject.collider.leftLine  << ")" << ", (" << playerObject.collider.bottomLine << ", "
-     << playerObject.collider.rightLine << ")";
-
-      window_position.Y++;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-
-     cout << "player_col_ptr:(" << playerObject.collider_pointer->topLine << ", " << playerObject.collider_pointer->leftLine  << ")" << ", (" << playerObject.collider_pointer->bottomLine << ", "
-     << playerObject.collider_pointer->rightLine << ")" ;
-
-    window_position.Y += 2;
     //mostra info di ciascun pixel della macchina
     window_position = playerObject.printSinglePixelInfo(hConsole, window_position);
-
-    window_position.X = 80;
-    window_position.Y++;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
 
 }
 

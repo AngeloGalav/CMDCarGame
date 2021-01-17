@@ -293,10 +293,10 @@
 1606847782 c:\users\asus\documents\school\corso informatica\cargameprogrammazione 1.01\menu.hpp
 	"ConsoleSprite.hpp"
 
-1610840548 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.cpp
+1610888878 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.cpp
 	"LevelManager.hpp"
 
-1610756118 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.hpp
+1610886231 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\levelmanager.hpp
 	"Car.hpp"
 	"Collectable.hpp"
 	<iomanip>
@@ -304,24 +304,24 @@
 	<stdlib.h>
 	<time.h>
 
-1610840718 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.hpp
+1610888740 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.hpp
 	"ConsoleSprite.hpp"
 
-1610839008 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.hpp
+1610889048 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.hpp
 	<fstream>
 	<string>
 	"Pixel.hpp"
 
-1610831920 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\pixel.hpp
+1610888614 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\pixel.hpp
 	<conio.h>
 	<windows.h>
 	<iostream>
 
-1610754733 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.hpp
+1610888791 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.hpp
 	"ConsoleSprite.hpp"
 	"Car.hpp"
 
-1610840276 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\main.cpp
+1610885768 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\main.cpp
 	"LevelManager.hpp"
 	"Menu.hpp"
 
@@ -332,15 +332,15 @@
 	"Menu.hpp"
 	<string>
 
-1606045059 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\pixel.cpp
+1610888577 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\pixel.cpp
 	"Pixel.hpp"
 
-1610757100 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.cpp
+1610888816 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\collectable.cpp
 	"Collectable.hpp"
 
-1610756763 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.cpp
+1610888678 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\consolesprite.cpp
 	"ConsoleSprite.hpp"
 
-1610840741 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.cpp
+1610888714 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.cpp
 	"Car.hpp"
 

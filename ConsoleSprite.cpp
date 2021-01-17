@@ -16,6 +16,7 @@ ConsoleSprite::ConsoleSprite()
         i++;
     }
     generateCollider();
+    object_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 ConsoleSprite::ConsoleSprite(char* directory, int x, int y)
@@ -26,7 +27,9 @@ ConsoleSprite::ConsoleSprite(char* directory, int x, int y)
     generateCollider();
 }
 
-//renderizza lo sprite (mostralo su schermo)
+/**
+    Renderizza lo sprite su schermo.
+*/
 void ConsoleSprite::renderSprite(HANDLE hConsole)
 {
     int i=0;
@@ -149,10 +152,10 @@ void ConsoleSprite::translate(int x, int y)
     screenPosition.X += x;
     screenPosition.Y += y;
     //fixing colliders
-    SquareCollider.bottomLine += y;
-    SquareCollider.topLine += y;
-    SquareCollider.leftLine += x;
-    SquareCollider.rightLine += x;
+    rect_collider.bottomLine += y;
+    rect_collider.topLine += y;
+    rect_collider.leftLine += x;
+    rect_collider.rightLine += x;
 
     int i=0;
     while (pixelCount > i)
@@ -174,10 +177,10 @@ void ConsoleSprite::moveTo(int x, int y)
     screenPosition.Y = y;
 
     //collider fix/update
-    SquareCollider.bottomLine += yVariation; //(+1 perche comincia da 0)
-    SquareCollider.topLine += yVariation;
-    SquareCollider.leftLine += xVariation;
-    SquareCollider.rightLine += xVariation;
+    rect_collider.bottomLine += yVariation; //(+1 perche comincia da 0)
+    rect_collider.topLine += yVariation;
+    rect_collider.leftLine += xVariation;
+    rect_collider.rightLine += xVariation;
 
     int i=0;
     while (pixelCount > i)
@@ -192,8 +195,8 @@ void ConsoleSprite::moveTo(int x, int y)
 //generates/calculates the boundaries of the sprite to optimize collision
 void ConsoleSprite::generateCollider()
 {
-    SquareCollider.bottomLine = pixels[pixelCount-1].position.Y; //possible thanks to how sprite decoding works (last pixel is always bottom)
-    SquareCollider.topLine = pixels[0].position.Y;
+    rect_collider.bottomLine = pixels[pixelCount-1].position.Y; //possible thanks to how sprite decoding works (last pixel is always bottom)
+    rect_collider.topLine = pixels[0].position.Y;
 
     calculate_RightLeftLine();
 }
@@ -217,8 +220,8 @@ void ConsoleSprite::calculate_RightLeftLine()
         }
     }
 
-    SquareCollider.rightLine = pixels[mx].position.X;
-    SquareCollider.leftLine = pixels[mn].position.X;
+    rect_collider.rightLine = pixels[mx].position.X;
+    rect_collider.leftLine = pixels[mn].position.X;
 }
 
 /**
@@ -229,22 +232,73 @@ void ConsoleSprite::renderColliders(HANDLE hConsole)
     COORD coord;
 
     SetConsoleTextAttribute(hConsole, 164);
-    coord.X = SquareCollider.leftLine;
-    coord.Y = SquareCollider.topLine;
+    coord.X = rect_collider.leftLine;
+    coord.Y = rect_collider.topLine;
     SetConsoleCursorPosition(hConsole, coord);
     cout << "o";
-    coord.X = SquareCollider.rightLine;
-    coord.Y = SquareCollider.bottomLine;
+    coord.X = rect_collider.rightLine;
+    coord.Y = rect_collider.bottomLine;
     SetConsoleCursorPosition(hConsole, coord);
     cout << "o";
-    coord.X = SquareCollider.leftLine;
-    coord.Y = SquareCollider.bottomLine;
+    coord.X = rect_collider.leftLine;
+    coord.Y = rect_collider.bottomLine;
     SetConsoleCursorPosition(hConsole, coord);
     cout << "o";
-    coord.X = SquareCollider.rightLine;
-    coord.Y = SquareCollider.topLine;
+    coord.X = rect_collider.rightLine;
+    coord.Y = rect_collider.topLine;
     SetConsoleCursorPosition(hConsole, coord);
     cout << "o";
+}
+
+
+void ConsoleSprite::deleteCollider_render(HANDLE hConsole)
+{
+    COORD coord;
+
+    SetConsoleTextAttribute(hConsole, 7);
+    coord.X = rect_collider.leftLine;
+    coord.Y = rect_collider.topLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << " ";
+    coord.X = rect_collider.rightLine;
+    coord.Y = rect_collider.bottomLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << " ";
+    coord.X = rect_collider.leftLine;
+    coord.Y = rect_collider.bottomLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << " ";
+    coord.X = rect_collider.rightLine;
+    coord.Y = rect_collider.topLine;
+    SetConsoleCursorPosition(hConsole, coord);
+    cout << " ";
+}
+
+Collider* ConsoleSprite::getCollider_ptr()
+{
+    return &rect_collider;
+}
+
+COORD ConsoleSprite::getPosition()
+{
+    return screenPosition;
+}
+
+void ConsoleSprite::printSpritePosition()
+{
+    cout << screenPosition.X  << ", " << screenPosition.Y << " ";
+}
+
+bool ConsoleSprite::checkCollision(Collider* ptr_collider_elem)
+{
+       return ((rect_collider.topLine <= ptr_collider_elem->bottomLine && rect_collider.topLine >= ptr_collider_elem->topLine)
+        || (rect_collider.bottomLine <= ptr_collider_elem->bottomLine && rect_collider.bottomLine >= ptr_collider_elem->topLine))
+        &&  ((rect_collider.leftLine >= ptr_collider_elem->leftLine && rect_collider.leftLine <= ptr_collider_elem->rightLine)
+        || (rect_collider.rightLine <= ptr_collider_elem->rightLine && rect_collider.rightLine >= ptr_collider_elem->leftLine)
+        //test in piu aggiunto nel caso l'oggetto sia piu piccolo del secondo.
+        || (ptr_collider_elem->rightLine >=  rect_collider.leftLine && ptr_collider_elem->rightLine <=  rect_collider.rightLine)
+        || (ptr_collider_elem->leftLine >=  rect_collider.leftLine && ptr_collider_elem->leftLine <=  rect_collider.rightLine));
+
 }
 
 
@@ -270,5 +324,5 @@ COORD ConsoleSprite::printSinglePixelInfo(HANDLE hConsole, COORD windowCursor)
 
 void ConsoleSprite::printAddressDebug()
 {
-    cout << &pixels[pixelCount-1].position.Y << ", " << SquareCollider.bottomLine;
+    cout << &pixels[pixelCount-1].position.Y << ", " << rect_collider.bottomLine;
 }

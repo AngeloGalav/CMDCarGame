@@ -82,8 +82,8 @@ void LevelManager::Update()
         for(int i=0; i<maxOnScreenObjects; i++)
         {
             //ogni slot che non è disponibile è occupato.
-            if (!availableCollectablesIndices[i]){
-
+            if (!availableCollectablesIndices[i])
+            {
                 collectables[i].deleteCollider_render(hConsole);
             }
         }
@@ -101,7 +101,8 @@ void LevelManager::Update()
     //renders the background animaiton
     enviromentAnimationRenderer();
 
-    if (time >= timeToWaitForSpawn && availableObjects > 0){
+    if (time >= timeToWaitForSpawn && availableObjects > 0)
+    {
         Spawn();
         time = 0;
     }
@@ -110,7 +111,6 @@ void LevelManager::Update()
     {
         if (!availableCollectablesIndices[i])
         {
-
             collectables[i].moveForward(hConsole);
 
             //collider visualization in devMode for sprites
@@ -122,7 +122,6 @@ void LevelManager::Update()
     }
 
     playerCar.Movement(hConsole);
-
 
     //collider visualization in devMode for sprites for car
     if (devMode)
@@ -157,7 +156,8 @@ void LevelManager::playerGameMechanics()
         points -= pointsUpperBound;
         levelCounter++;
 
-        if (timeToWaitForSpawn > maxTimeToWaitForSpawn){
+        if (timeToWaitForSpawn > maxTimeToWaitForSpawn)
+        {
             timeToWaitForSpawn--;
         }
 
@@ -175,9 +175,7 @@ void LevelManager::playerGameMechanics()
             levelCounterFloor++;
         }
     }
-
     else if (points < 0) //previous level
-
     {
         points =  pointsUpperBound + points;
 
@@ -233,12 +231,11 @@ void LevelManager::manualAccelerator()
 */
 void LevelManager::checkColliders()
 {
-
     for(int i=0; i<maxOnScreenObjects; i++)
     {
         //check elements that are on screen
-        if (!availableCollectablesIndices[i]){
-
+        if (!availableCollectablesIndices[i])
+        {
             //element got hit by car
             Collider* col_ptr = collectables[i].getCollider_ptr();
 
@@ -251,11 +248,10 @@ void LevelManager::checkColliders()
             }
 
             //element goes offscreen
-            if (col_ptr->bottomLine >= 43 && col_ptr->bottomLine < 998)
+            if (col_ptr->bottomLine > 42 && col_ptr->bottomLine < 998)
             {
                 CollisionHandler(i);
             }
-
         }
     }
 }
@@ -271,11 +267,10 @@ void LevelManager::checkColliders()
 
 void LevelManager::Spawn()
 {
-    int k=-1;
+    int k = -1;
     randomValue = rand() % 3;
 
-    int j=0;
-
+    int j = 0;
 
     //find the first available space (true if available, false if not)
     while  (j < maxOnScreenObjects)
@@ -314,7 +309,6 @@ void LevelManager::Spawn()
         //Posso renderizzare l'oggetto.
         collectables[k].renderSprite(hConsole);
     }
-
 }
 
 /**
@@ -395,9 +389,9 @@ void LevelManager::enviromentAnimationRenderer()
         for (int j = 0; j < 43; j++)
         {
             gotoPos(10,j);
-            if (j%2 == 0){
+            if (j % 2 == 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
-            } else if (j%2 != 0){
+            } else if (j % 2 != 0){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
             }
             cout << ' ';
@@ -425,14 +419,14 @@ void LevelManager::enviromentAnimationRenderer()
 */
 void LevelManager::drawBackground()
 {
-    for (int i=0; i<113; i++){
-        for (int j=0; j<43; j++){
+    for (int i = 0; i < 113; i++){
+        for (int j = 0; j < 43; j++){
             gotoPos(i,j);
-            if (j%2==0 && (i==10 || i==70)){
+            if (j % 2 == 0 && (i == 10 || i == 70)){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
-            } else if (j%2!=0 && (i==10 || i==70)){
+            } else if (j % 2 != 0 && (i == 10 || i == 70)){
                 SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
-            } else if (i>10 && i<70){
+            } else if (i > 10 && i < 70){
                 SetConsoleTextAttribute(hConsole, 0x00);
             } else{
                 SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN);
@@ -440,7 +434,6 @@ void LevelManager::drawBackground()
             cout << " ";
         }
     }
-
 }
 
 //UI elements
@@ -474,7 +467,6 @@ void LevelManager::UIGameInfo()
 
     gotoPos(80,18);
     cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << "   ";
-
 }
 
 /**

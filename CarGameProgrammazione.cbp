@@ -38,19 +38,22 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Car.cpp" />
-		<Unit filename="Car.hpp" />
-		<Unit filename="Collectable.cpp" />
-		<Unit filename="Collectable.hpp" />
-		<Unit filename="ConsoleSprite.cpp" />
-		<Unit filename="ConsoleSprite.hpp" />
-		<Unit filename="LevelManager.cpp" />
-		<Unit filename="LevelManager.hpp" />
-		<Unit filename="Menu.cpp" />
-		<Unit filename="Menu.hpp" />
-		<Unit filename="Pixel.cpp" />
-		<Unit filename="Pixel.hpp" />
-		<Unit filename="main.cpp" />
+		<Unit filename="include/Car.hpp" />
+		<Unit filename="include/Collectable.hpp" />
+		<Unit filename="include/ConsoleSprite.hpp" />
+		<Unit filename="include/Definitions.hpp" />
+		<Unit filename="include/LevelManager.hpp" />
+		<Unit filename="include/List.hpp" />
+		<Unit filename="include/Menu.hpp" />
+		<Unit filename="include/Pixel.hpp" />
+		<Unit filename="src/Car.cpp" />
+		<Unit filename="src/Collectable.cpp" />
+		<Unit filename="src/ConsoleSprite.cpp" />
+		<Unit filename="src/LevelManager.cpp" />
+		<Unit filename="src/List.cpp" />
+		<Unit filename="src/Menu.cpp" />
+		<Unit filename="src/Pixel.cpp" />
+		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

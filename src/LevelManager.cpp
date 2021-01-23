@@ -219,8 +219,9 @@ void LevelManager::playerGameMechanics()
             }
         }
     }
-
 }
+
+
 
 /**
     Funzione che abilita l'accelerazione manuale, usata in devMode.
@@ -408,6 +409,7 @@ void LevelManager::enviromentAnimationRenderer()
             cout << ' ';
         }
     }
+
     frameAnimationEnvBool = !frameAnimationEnvBool;
 }
 

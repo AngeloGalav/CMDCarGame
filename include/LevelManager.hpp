@@ -42,7 +42,6 @@ class LevelManager
         int game_speed;
         int points;
         int speed_decrementer;
-        int maxLevel;
 
         //level statistics system
         infolist* level_list;

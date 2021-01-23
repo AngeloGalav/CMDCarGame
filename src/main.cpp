@@ -83,15 +83,15 @@ void hidecursor()
 void DebugWindow(HANDLE hConsole, Car playerObject, LevelManager level)
 {
     COORD window_position;
-    window_position.X = 80;
-    window_position.Y = 20;
+    window_position.X = UI_POS_X;
+    window_position.Y = UI_POS_Y + UI_WIDTH;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
     SetConsoleTextAttribute(hConsole, 14);
 
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
 
-     cout << "player_position: ";
+    cout << "player_position: ";
     playerObject.printSpritePosition();
 
 

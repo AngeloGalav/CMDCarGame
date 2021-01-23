@@ -34,13 +34,12 @@ void LevelManager::Start()
     time = 0;
     isDead = false;
 
-    game_speed = 100;
+    game_speed = SPEED_LIMIT;
     points = 0;
     levelCounter = 1;
     levelCounterFloor = 0;
     list_size = 0;
     timeToWaitForSpawn = MIN_TIME_TO_WAIT_SPAWN;
-    maxLevel = 8;
 
     frameAnimationEnvBool = true;
 
@@ -57,6 +56,7 @@ void LevelManager::Start()
     for(int i=0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
         availableCollectablesIndices[i] = true;
+        collectables[i] = Collectable();
     }
 
     drawBackground();
@@ -110,7 +110,7 @@ void LevelManager::Update()
         time = 0;
     }
 
-    for(int i=0; i < MAX_ON_SCREEN_OBJECTS; i++)
+    for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
         if (!availableCollectablesIndices[i])
         {
@@ -145,6 +145,8 @@ void LevelManager::Update()
 */
 void LevelManager::playerGameMechanics()
 {
+    int prev_game_speed = game_speed;
+
     //aggiunto letteralmente solo perche ci dava fastidio vedere 129 e non 130 per velocita
     if (game_speed == 21 && !devMode)
     {
@@ -173,7 +175,7 @@ void LevelManager::playerGameMechanics()
             game_speed = 1;
         }
 
-        if (timeToWaitForSpawn <= MAX_TIME_TO_WAIT_SPAWN && game_speed <= 1)
+        if (timeToWaitForSpawn == MAX_TIME_TO_WAIT_SPAWN && game_speed == prev_game_speed)
         { //punto in cui la difficoltà finisce di aumentare
             levelCounterFloor++;
         }
@@ -194,7 +196,7 @@ void LevelManager::playerGameMechanics()
             isDead = true;
         }
 
-        if (levelCounterFloor > 1)
+        if (levelCounterFloor >= 1)
         { //se la condizione è vera, abbiamo raggiunto la difficoltà massima
 
             levelCounterFloor--;
@@ -207,7 +209,7 @@ void LevelManager::playerGameMechanics()
                 timeToWaitForSpawn++;
             }
 
-            if (game_speed + 20 < SPEED_LIMIT ) //speed bounds
+            if (game_speed < SPEED_LIMIT ) //speed bounds
             {
                 game_speed += 20;
             }
@@ -217,6 +219,7 @@ void LevelManager::playerGameMechanics()
             }
         }
     }
+
 }
 
 /**
@@ -224,7 +227,7 @@ void LevelManager::playerGameMechanics()
 */
 void LevelManager::manualAccelerator()
 {
-    if (GetAsyncKeyState(KEY_E) && game_speed < 125 && devMode) game_speed++; //81 e 69 sono i keycode di E e Q rispettivamente.
+    if (GetAsyncKeyState(KEY_E) && game_speed < SPEED_LIMIT && devMode) game_speed++; //81 e 69 sono i keycode di E e Q rispettivamente.
     else if (GetAsyncKeyState(KEY_Q) && game_speed > 1 && devMode) game_speed--;
 }
 
@@ -252,7 +255,7 @@ void LevelManager::checkColliders()
 
                 CollisionHandler(i);
                 points += collectables[i].getEffect();
-                totalPoints += collectables[i].getEffect();
+                if (collectables[i].getEffect() > 0) totalPoints += collectables[i].getEffect();
             }
 
             //element goes offscreen
@@ -290,7 +293,6 @@ void LevelManager::Spawn()
             availableCollectablesIndices[j] = false;    //la cella ora non è più disponibile (perché presa)
             j = MAX_ON_SCREEN_OBJECTS; //Uscita da loop senza break
         }
-
         j++;
     }
 
@@ -436,17 +438,17 @@ void LevelManager::drawBackground()
 void LevelManager::UIGameInfo()
 {
     COORD window_position;
-    window_position.X = 80;
-    window_position.Y = 10;
+    window_position.X = UI_POS_X;
+    window_position.Y = UI_POS_Y;
 
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    SetConsoleTextAttribute(hConsole, 14);
+    SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
 
     cout << "      Game Info";
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
-    cout << " SPEED: " << setw(6) << 150 - game_speed << " km/h";
+    cout << " SPEED: " << setw(6) << (SPEED_LIMIT + 50) - game_speed << " km/h";
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
@@ -456,8 +458,10 @@ void LevelManager::UIGameInfo()
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
     cout << " Score: " << setw(11) << points;
 
+    /*
     gotoPos(80,18);
-    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << " List_sz:" << list_size << "   ";
+    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << "   ";
+    */
 }
 
 /**
@@ -467,18 +471,18 @@ void LevelManager::UIGameInfo()
 void LevelManager::UIGameInfoInit()
 {
     int j = 10;
-    for (int i = 80; i < 100; i++)
+    for (int i = UI_POS_X; i < UI_POS_X + UI_WIDTH; i++)
     {
-        for (j = 10; j < 20; j++)
+        for (j = UI_POS_Y; UI_POS_Y + UI_HEIGHT < 20; j++)
         {
             gotoPos(i, j);
-            SetConsoleTextAttribute(hConsole, 14);
+            SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
             cout << " ";
         }
     }
 
     //85
-    gotoPos(85, j-2);
+    gotoPos(UI_POS_X + 5, j-2);
     cout << "Good Luck!";
 }
 

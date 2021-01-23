@@ -83,7 +83,7 @@ void DebugWindow(HANDLE hConsole, Car playerObject, LevelManager level)
 {
     COORD window_position;
     window_position.X = UI_POS_X;
-    window_position.Y = UI_POS_Y + UI_WIDTH;
+    window_position.Y = UI_POS_Y + UI_HEIGHT;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
     SetConsoleTextAttribute(hConsole, 14);
 

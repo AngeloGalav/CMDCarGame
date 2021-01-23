@@ -265,9 +265,11 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
 
     int lineCharCounter = 0;
 
-    if (centered){
+    if (centered)
+    {
         //primo filestream per il conteggio dei caratteri, usato solo se il documento deve essere centrato
         fstream fin(directory, fstream::in);
+
         while (fin >> noskipws >> ch)
         {
             if (ch != '\n')
@@ -288,7 +290,8 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
 
         //fstream closes automatically, but it is best practice to close when you've finished to use it
         fin.close();
-    } else {
+    } else
+    {
         //se il testo non deve essere centrato, allora mettilo nella posizione di default
         position.X = x;
     }
@@ -306,6 +309,7 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
         }
 
     }
+
     fin1.close();
 }
 

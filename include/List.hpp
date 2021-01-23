@@ -2,13 +2,6 @@
 #define LIST_HPP
 #include "Pixel.hpp"
 
-struct simple_list
-{
-    int index;
-    simple_list *prev;
-    simple_list *next;
-};
-
 struct level_info
 {
     int level_number;
@@ -17,12 +10,12 @@ struct level_info
     int gas_tanks;
 };
 
+//Classe lista. Funziona come una queue.
+
 class infolist
 {
     private:
         level_info level;
-        int _size;
-
 
     public:
         infolist *prev;
@@ -35,7 +28,8 @@ class infolist
         void printLevelInfo();
 
         void deleteFirst();
-        //void add();
+        void deleteLast();
+        void addElement(infolist* toAdd);
 };
 
 typedef infolist* ptr_list;

@@ -28,8 +28,7 @@ LevelManager::LevelManager(HANDLE thConsole)
 void LevelManager::Start()
 {
     //reinitialization of game values, so that nothing changes when the player restarts
-    maxOnScreenObjects = 5;
-    availableObjects = maxOnScreenObjects;
+    availableObjects = MAX_ON_SCREEN_OBJECTS;
     onScreenObjects = 0;
 
     time = 0;
@@ -39,10 +38,8 @@ void LevelManager::Start()
     points = 0;
     levelCounter = 1;
     levelCounterFloor = 0;
-    speed_limit = 120;
-    maxTimeToWaitForSpawn = 6;
-    minTimeToWaitForSpawn = 16;
-    timeToWaitForSpawn = minTimeToWaitForSpawn;
+    list_size = 0;
+    timeToWaitForSpawn = MIN_TIME_TO_WAIT_SPAWN;
     maxLevel = 8;
 
     frameAnimationEnvBool = true;
@@ -57,7 +54,7 @@ void LevelManager::Start()
     playerCar.setBoundaries(LEFT_SCREEN_BOUNDARY + 1, RIGHT_SCREEN_BOUNDARY - 1,
                             UPPER_SCREEN_BOUNDARY + 1, LOWER_SCREEN_BOUNDARY - 1);
 
-    for(int i=0; i < maxOnScreenObjects; i++)
+    for(int i=0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
         availableCollectablesIndices[i] = true;
     }
@@ -85,7 +82,7 @@ void LevelManager::Update()
         //car collider image clearance
         playerCar.deleteCollider_render(hConsole);
 
-        for(int i = 0; i < maxOnScreenObjects; i++)
+        for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
         {
             //ogni slot che non è disponibile è occupato.
             if (!availableCollectablesIndices[i])
@@ -113,7 +110,7 @@ void LevelManager::Update()
         time = 0;
     }
 
-    for(int i=0; i<maxOnScreenObjects; i++)
+    for(int i=0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
         if (!availableCollectablesIndices[i])
         {
@@ -162,7 +159,7 @@ void LevelManager::playerGameMechanics()
         points -= pointsUpperBound;
         levelCounter++;
 
-        if (timeToWaitForSpawn > maxTimeToWaitForSpawn)
+        if (timeToWaitForSpawn > MAX_TIME_TO_WAIT_SPAWN)
         {
             timeToWaitForSpawn--;
         }
@@ -176,7 +173,7 @@ void LevelManager::playerGameMechanics()
             game_speed = 1;
         }
 
-        if (timeToWaitForSpawn <= maxTimeToWaitForSpawn && game_speed <= 1)
+        if (timeToWaitForSpawn <= MAX_TIME_TO_WAIT_SPAWN && game_speed <= 1)
         { //punto in cui la difficoltà finisce di aumentare
             levelCounterFloor++;
         }
@@ -205,18 +202,18 @@ void LevelManager::playerGameMechanics()
         else
         {    //posso abbassare la difficoltà solo se il livello
 
-            if (timeToWaitForSpawn < minTimeToWaitForSpawn)
+            if (timeToWaitForSpawn < MIN_TIME_TO_WAIT_SPAWN)
             {
                 timeToWaitForSpawn++;
             }
 
-            if (game_speed + 20 < speed_limit ) //speed bounds
+            if (game_speed + 20 < SPEED_LIMIT ) //speed bounds
             {
                 game_speed += 20;
             }
             else
             {
-                game_speed = speed_limit;
+                game_speed = SPEED_LIMIT;
             }
         }
     }
@@ -240,7 +237,7 @@ void LevelManager::manualAccelerator()
 */
 void LevelManager::checkColliders()
 {
-    for(int i = 0; i < maxOnScreenObjects; i++)
+    for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
         //check elements that are on screen
         if (!availableCollectablesIndices[i])
@@ -284,14 +281,14 @@ void LevelManager::Spawn()
     int j = 0;
 
     //find the first available space (true if available, false if not)
-    while  (j < maxOnScreenObjects)
+    while  (j < MAX_ON_SCREEN_OBJECTS)
     {
         if (availableCollectablesIndices[j])
         {
 
             k = j; //k è l'id che scelgo
             availableCollectablesIndices[j] = false;    //la cella ora non è più disponibile (perché presa)
-            j = maxOnScreenObjects; //Uscita da loop senza break
+            j = MAX_ON_SCREEN_OBJECTS; //Uscita da loop senza break
         }
 
         j++;
@@ -460,7 +457,7 @@ void LevelManager::UIGameInfo()
     cout << " Score: " << setw(11) << points;
 
     gotoPos(80,18);
-    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << "   ";
+    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << " List_sz:" << list_size << "   ";
 }
 
 /**
@@ -510,9 +507,15 @@ void LevelManager::addStats()
     level_list->setLevelInfo(levelCounter, points, gas_tanks_counter, puddle_counter);
     gas_tanks_counter = 0;
     puddle_counter = 0;
-    level_list->next = new infolist();
-    level_list->next->prev = level_list;
+    level_list->addElement(new infolist());
     level_list = level_list->next;
+    list_size++;
+
+    if (list_size > MAX_LIST_SIZE)
+    {
+        level_list->deleteFirst();
+        list_size--;
+    }
 }
 
 bool LevelManager::isPlayerDead()

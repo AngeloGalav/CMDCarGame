@@ -3,14 +3,12 @@
 infolist::infolist(){
     prev = NULL;
     next = NULL;
-    level.level_number = 1;
-    level.points = 0;
-    level.mud = 0;
-    level.gas_tanks = 0;
+    setLevelInfo(1, 0, 0, 0);
 }
 
 infolist::infolist(int level_number, int points, int n_gas_tanks, int n_mud)
 {
+    prev = NULL;
     next = NULL;
     setLevelInfo(level_number, points, n_gas_tanks, n_mud);
 }
@@ -29,4 +27,23 @@ void infolist::printLevelInfo()
 {
     cout << "In level " << level.level_number << ", you've made " << level.points << " pts.";
     cout << " You've hit " << level.mud << " puddles and " << level.gas_tanks << " gas tanks." ;
+}
+
+void infolist::deleteFirst()
+{
+    ptr_list hd = this;
+
+    while (hd->prev != NULL)
+    {
+        hd = hd->prev;
+    }
+
+    hd->next->prev = NULL;
+    delete(hd);
+}
+
+void infolist::addElement(infolist* toAdd)
+{
+    this->next = toAdd;
+    this->next->prev = this;
 }

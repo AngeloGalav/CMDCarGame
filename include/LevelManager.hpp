@@ -41,16 +41,14 @@ class LevelManager
         //game parameters
         int game_speed;
         int points;
-        int speed_limit;
-        int maxTimeToWaitForSpawn;
-        int minTimeToWaitForSpawn;
         int speed_decrementer;
         int maxLevel;
 
         //level statistics system
         infolist* level_list;
-        int puddle_counter;
-        int gas_tanks_counter;
+        unsigned int list_size;
+        unsigned int puddle_counter;
+        unsigned int gas_tanks_counter;
         void addStats();
         int totalPoints;
 
@@ -63,15 +61,12 @@ class LevelManager
 
 
     public:
-        //debug, to change when it's ready (to private)
-        int maxOnScreenObjects;
-
         LevelManager(HANDLE thConsole);
         LevelManager(HANDLE thConsole, Car player, Collectable gas);
 
         //the index of the level
-        Collectable collectables[20]; //objects on screen;
-        bool availableCollectablesIndices[20]; //available ""spaces"" on screen
+        Collectable collectables[MAX_ON_SCREEN_OBJECTS]; //objects on screen;
+        bool availableCollectablesIndices[MAX_ON_SCREEN_OBJECTS]; //available ""spaces"" on screen
 
         //devMode enabled or not.
         bool devMode;

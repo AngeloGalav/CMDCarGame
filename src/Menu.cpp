@@ -346,7 +346,7 @@ COORD Menu::printStats(COORD position)
     SetConsoleCursorPosition(hconsole,position);
     SetConsoleTextAttribute(hconsole, 10);
 
-    cout << "Game stats: ";
+    cout << "Previous levels stats: ";
     position.Y++;
     SetConsoleCursorPosition(hconsole,position);
     SetConsoleTextAttribute(hconsole, BACKGROUND_BLACK);

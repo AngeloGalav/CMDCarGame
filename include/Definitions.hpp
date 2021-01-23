@@ -1,5 +1,6 @@
 //costants
 #define MAX_PIXEL_SIZE 32
+#define MAX_LIST_SIZE 12 //change to 12
 
 #define LOWER_SCREEN_BOUNDARY 43
 #define UPPER_SCREEN_BOUNDARY 0
@@ -17,6 +18,11 @@
 
 //game constants
 #define ROAD_CENTER 40
+#define SPEED_LIMIT 120
+#define MAX_TIME_TO_WAIT_SPAWN 6
+#define MIN_TIME_TO_WAIT_SPAWN 16
+#define MAX_ON_SCREEN_OBJECTS 5
+
 
 //colors
 #define BACKGROUND_CYAN 180

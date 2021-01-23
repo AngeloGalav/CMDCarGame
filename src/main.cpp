@@ -20,7 +20,7 @@ int main()
     //levelManager class
     LevelManager levelManager(hConsole);
 
-    //hide the cursorss
+    //hide the cursor
     hidecursor();
 
     //Menu class handles also SetWindow options (the dimensions of the window, the buffersize etc...)
@@ -66,7 +66,6 @@ void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu)
             }
         }
     }
-
 }
 
 //function for hiding the cursor

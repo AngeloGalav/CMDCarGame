@@ -368,6 +368,7 @@ void LevelManager::enviromentAnimationRenderer()
             else if (j % 2 != 0) SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
 
             cout << ' ';
+
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, 7);
 
@@ -392,6 +393,7 @@ void LevelManager::enviromentAnimationRenderer()
             else if (j % 2 != 0)SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
 
             cout << ' ';
+
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, BACKGROUND_BLACK);
 
@@ -473,7 +475,7 @@ void LevelManager::UIGameInfoInit()
     int j = 10;
     for (int i = UI_POS_X; i < UI_POS_X + UI_WIDTH; i++)
     {
-        for (j = UI_POS_Y; UI_POS_Y + UI_HEIGHT < 20; j++)
+        for (j = UI_POS_Y; j < UI_POS_Y + UI_HEIGHT; j++)
         {
             gotoPos(i, j);
             SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
@@ -482,7 +484,8 @@ void LevelManager::UIGameInfoInit()
     }
 
     //85
-    gotoPos(UI_POS_X + 5, j-2);
+    SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
+    gotoPos(UI_POS_X + 5, j - 2);
     cout << "Good Luck!";
 }
 

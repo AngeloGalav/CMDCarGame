@@ -11,19 +11,18 @@ void DebugWindow(HANDLE hConsole, Car playerObject, LevelManager level);
 
 int main()
 {
-    //random seed
     srand (time(NULL));
 
-    //get console handle
+    //console handle
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    //levelManager class
+    //creazione classe levelmanager
     LevelManager levelManager(hConsole);
 
-    //hide the cursor
+    //occulta il cursore
     hidecursor();
 
-    //Menu class handles also SetWindow options (the dimensions of the window, the buffersize etc...)
+    
     Menu mainMenu(SCREEN_WIDTH, SCREEN_HEIGHT);
     mainMenu.MainMenu();
 
@@ -68,13 +67,13 @@ void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu)
     }
 }
 
-//function for hiding the cursor
+
 void hidecursor()
 {
    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-   CONSOLE_CURSOR_INFO info; //information of the cursor
+   CONSOLE_CURSOR_INFO info; //informazioni sul cursore
    info.dwSize = 100;
-   info.bVisible = FALSE; //only active for debug
+   info.bVisible = FALSE; //attiva solo in debug
    SetConsoleCursorInfo(consoleHandle, &info);
 }
 

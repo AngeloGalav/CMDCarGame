@@ -6,10 +6,10 @@
 
 struct Collider
 {
-    SHORT rightLine; //i'll save only the y coordinates of these, since the x value is the same for both
+    SHORT rightLine; //salviamo solo la y perchè la x è uguale per entrambi
     SHORT leftLine;
 
-    SHORT bottomLine;// i'll save only the x coordinates of these, since the y value is the same for both
+    SHORT bottomLine;//salvo solamente la y perchè la x è uguale per entrambi
     SHORT topLine;
 
 };
@@ -17,11 +17,11 @@ struct Collider
 
 class ConsoleSprite
 {
-    //screen position values etc are READ ONLY! DO NOT modify them outside of the class scope
+    //screePosition etc. sono READ ONLY! NON MODIFICARE fuori dallo scope della classe
     private:
         int pixelCount;
         void calculate_RightLeftLine();
-        Pixel pixels[MAX_PIXEL_SIZE];   //32 is the maximum sprite buffer size
+        Pixel pixels[MAX_PIXEL_SIZE];   //32 è il massimo buffer size
         void loadFromFile(char* directory);
 
     protected:
@@ -32,7 +32,7 @@ class ConsoleSprite
         void translate(int x, int y);
 
     public:
-        //constructors
+        //costruttori
         ConsoleSprite();
         ConsoleSprite(char* directory, int x, int y);
         void setConsoleHandle(HANDLE hConsole);

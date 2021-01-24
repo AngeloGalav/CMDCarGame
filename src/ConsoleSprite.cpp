@@ -1,7 +1,6 @@
 #include "ConsoleSprite.hpp"
 
 
-//placeholder sprite if directory is undefined
 ConsoleSprite::ConsoleSprite()
 {
     screenPosition.X = 20;
@@ -28,7 +27,7 @@ ConsoleSprite::ConsoleSprite(char* directory, int x, int y)
 }
 
 /**
-    Renderizza lo sprite su schermo.
+*   Renderizza lo sprite su schermo.
 */
 void ConsoleSprite::renderSprite(HANDLE hConsole)
 {
@@ -39,7 +38,9 @@ void ConsoleSprite::renderSprite(HANDLE hConsole)
     }
 }
 
-//elimina lo sprite su schermo
+/**
+ * elimina lo sprite su schermo
+ */ 
 void ConsoleSprite::deleteSprite(HANDLE hConsole)
 {
     int i=0;
@@ -54,20 +55,20 @@ void ConsoleSprite::loadFromFile(char* directory)
 {
     pixelCount = 0;
     char ch;
-    //filestream for sprite decoding
+    //filestream per il decoding dello sprite
     fstream fin1(directory, fstream::in);
     int i=0;
     COORD coords;
     coords.Y = 0;
     //coords.x parte da -1 per non fare un do while
     coords.X = -1;
-    //decoding (SPRITE HAS TO BE LESS THAN 32 PIX)
-    //the whole function decodes the file until the characters are finished.
-    while (fin1 >> noskipws >> ch) //decoding char by char
+    //decoding (lo sprite deve essere minore di 32)
+    //l'intera funzione decodifica il file finchè i caratteri non sono finiti.
+    while (fin1 >> noskipws >> ch) //decodifica carattere per carattere
                                    //no skipws = non si skippano gli spazi bianchi
-    {                              //TODO: fai progetto empty di prova per vedere cosa sa fin1 noskipws ch etc
+    {                              
         coords.X++;
-        if (ch != ' ' && ch != '\n') //if character is empty, then skip
+        if (ch != ' ' && ch != '\n') //salta il carattere vuoto
         {
             pixelCount++;
             if (ch == 'r')
@@ -135,7 +136,7 @@ void ConsoleSprite::loadFromFile(char* directory)
             pixels[i].position.X = coords.X + screenPosition.X;
             i++;
         }
-        else if (ch == '\n') //line has ended.
+        else if (ch == '\n') //la linea è terminata
         {
             coords.X = -1;
             coords.Y++;
@@ -192,7 +193,7 @@ void ConsoleSprite::moveTo(int x, int y)
 }
 
 
-//generates/calculates the boundaries of the sprite to optimize collision
+//genera/calcola i bordi dello sprite per ottimizzare le collisioni
 void ConsoleSprite::generateCollider()
 {
     rect_collider.bottomLine = pixels[pixelCount-1].position.Y; //possible thanks to how sprite decoding works (last pixel is always bottom)
@@ -201,7 +202,6 @@ void ConsoleSprite::generateCollider()
     calculate_RightLeftLine();
 }
 
-//separeted the calculations of the RightLine so it looks cleaner
 void ConsoleSprite::calculate_RightLeftLine()
 {
     int mx = 0;

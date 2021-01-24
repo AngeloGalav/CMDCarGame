@@ -27,7 +27,7 @@ LevelManager::LevelManager(HANDLE thConsole)
 */
 void LevelManager::Start()
 {
-    //reinitialization of game values, so that nothing changes when the player restarts
+    //reinizializzazione dei valori di gioco, cosÃ¬ che nulla cambi al restart del gioco
     availableObjects = MAX_ON_SCREEN_OBJECTS;
     onScreenObjects = 0;
 
@@ -84,7 +84,7 @@ void LevelManager::Update()
 
         for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
         {
-            //ogni slot che non è disponibile è occupato.
+            //ogni slot che non ï¿½ disponibile ï¿½ occupato.
             if (!availableCollectablesIndices[i])
             {
                 collectables[i].deleteCollider_render(hConsole);
@@ -140,7 +140,7 @@ void LevelManager::Update()
 
 /**
     Funzione che crea e aggiorna le meccaniche di gioco, in particolare si occupa di aumentare il livello,
-    la difficoltà, etc.. (oppure di diminuirli).
+    la difficoltï¿½, etc.. (oppure di diminuirli).
 
 */
 void LevelManager::playerGameMechanics()
@@ -176,7 +176,7 @@ void LevelManager::playerGameMechanics()
         }
 
         if (timeToWaitForSpawn == MAX_TIME_TO_WAIT_SPAWN && game_speed == prev_game_speed)
-        { //punto in cui la difficoltà finisce di aumentare
+        { //punto in cui la difficoltï¿½ finisce di aumentare
             levelCounterFloor++;
         }
     }
@@ -197,12 +197,12 @@ void LevelManager::playerGameMechanics()
         }
 
         if (levelCounterFloor >= 1)
-        { //se la condizione è vera, abbiamo raggiunto la difficoltà massima
+        { //se la condizione ï¿½ vera, abbiamo raggiunto la difficoltï¿½ massima
 
             levelCounterFloor--;
         }
         else
-        {    //posso abbassare la difficoltà solo se il livello
+        {    //posso abbassare la difficoltï¿½ solo se il livello
 
             if (timeToWaitForSpawn < MIN_TIME_TO_WAIT_SPAWN)
             {
@@ -235,7 +235,7 @@ void LevelManager::manualAccelerator()
 
 /**
     Funzione che controlla i collider di ciascun oggetto nel gioco, per vedere se sbatte contro la macchina.
-    E' lento, ma è anche il metodo più preciso per registrare le collisioni.
+    E' lento, ma ï¿½ anche il metodo piï¿½ preciso per registrare le collisioni.
 
     Se ho una collisione, passo il controllo a CollisionHandler
 */
@@ -269,12 +269,12 @@ void LevelManager::checkColliders()
 }
 
 /**
-    Funzione che spawna un oggetto in posizione random dalla parte più alta del framebuffer.
+    Funzione che spawna un oggetto in posizione random dalla parte piï¿½ alta del framebuffer.
 
-    Per funzionare, guarda se c'è un posto libero fra i collectables di gioco e poi gli viene così assegnato un
+    Per funzionare, guarda se c'ï¿½ un posto libero fra i collectables di gioco e poi gli viene cosï¿½ assegnato un
     ID (l'indice del availableCollectablesIndixes).
 
-    Dopodiché, viene renderizzato.
+    Dopodichï¿½, viene renderizzato.
 */
 
 void LevelManager::Spawn()
@@ -290,14 +290,14 @@ void LevelManager::Spawn()
         if (availableCollectablesIndices[j])
         {
 
-            k = j; //k è l'id che scelgo
-            availableCollectablesIndices[j] = false;    //la cella ora non è più disponibile (perché presa)
+            k = j; //k ï¿½ l'id che scelgo
+            availableCollectablesIndices[j] = false;    //la cella ora non ï¿½ piï¿½ disponibile (perchï¿½ presa)
             j = MAX_ON_SCREEN_OBJECTS; //Uscita da loop senza break
         }
         j++;
     }
 
-    //se dopo tutti questi passaggi, k è != -1 (quindi si è trovato un posto libero) finalizza lo spawn
+    //se dopo tutti questi passaggi, k ï¿½ != -1 (quindi si ï¿½ trovato un posto libero) finalizza lo spawn
     if (k != -1)
     {
         if (randomValue == 0) collectables[k] = gas;
@@ -356,7 +356,7 @@ void LevelManager::gotoPos(int x, int y)
 
 /**
     Crea la animazione ai bordi della strada e nella riga
-    di mezzeria, dando un senso di velocità al gioco.
+    di mezzeria, dando un senso di velocitï¿½ al gioco.
 */
 void LevelManager::enviromentAnimationRenderer()
 {
@@ -534,7 +534,7 @@ bool LevelManager::isPlayerDead()
 
 //DEBUG FUNCTIONS
 /**
-    Getter della velocità di gioco. Usato per debugging.
+    Getter della velocitï¿½ di gioco. Usato per debugging.
 */
 int LevelManager::getGameSpeed()
 {

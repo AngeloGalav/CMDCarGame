@@ -1,9 +1,6 @@
 #include "LevelManager.hpp"
 #include "Menu.hpp"
-#define _WIN32_WINNT 0x0500
 #include <windows.h>
-
-//TODO: Check if updateCollider() does something or is useless by using devMode
 
 void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu);
 void windowOptions();

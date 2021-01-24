@@ -1,18 +1,22 @@
 #include "Pixel.hpp"
 
-Pixel::Pixel(char pix)
-{
-    pixChar = pix;
-    position.X = 0;
-    position.Y = 0;
-}
-
 Pixel::Pixel()
 {
     position.X = 20;
     position.Y = 20;
     pixChar = ' ';
+    color = BLACK_B_BLACK_F;
 }
+
+Pixel::Pixel(char pix)
+{
+    position.X = 0;
+    position.Y = 0;
+    pixChar = pix;
+    color = BLACK_B_BLACK_F;
+}
+
+
 
 /**
     Renderizza il pixel monstrandolo sullo schermo.

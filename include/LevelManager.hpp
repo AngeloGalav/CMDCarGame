@@ -19,7 +19,7 @@ class LevelManager
     protected:
         //spawner variables
         int timeToWaitForSpawn;
-        int time; //numero di iterazioni svolte ad ogni spawn.
+        int time;   //numero di iterazioni svolte ad ogni spawn.
         int availableObjects; //numero di oggetti che possiamo spawnare
 
         //Funzioni di estetica

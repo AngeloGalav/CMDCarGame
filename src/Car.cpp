@@ -25,7 +25,7 @@ Car::Car(char* directory, int x, int y, HANDLE thConsole) : ConsoleSprite(direct
 */
 void Car::optimized_Movement()
 {
-    int x, y;
+    int x = 0, y = 0;
 
     bool hasMoved = true;
     if (GetAsyncKeyState(VK_UP) && rect_collider.topLine > up_wall) {x = 0; y = -1;}

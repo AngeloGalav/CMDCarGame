@@ -85,7 +85,7 @@ void Menu::GameOverMenu()
 
     //menu entries
     SetConsoleTextAttribute(hconsole, BLACK_B_WHITE_F);
-    position.X = width/2 - (73-50)/2 - 3;
+    position.X = 42;
 
     position.Y += 4;
     CursorMenuStartPosition = position.Y;
@@ -104,7 +104,6 @@ void Menu::GameOverMenu()
 
     while(!stop)
     {
-
         position.X = 70;
 
         SetConsoleCursorPosition(hconsole,position);
@@ -417,7 +416,3 @@ void Menu::printStatsRec(int nline)
         printStatsRec(nline);
     }
 }
-
-
-
-

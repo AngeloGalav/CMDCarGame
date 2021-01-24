@@ -283,6 +283,7 @@ void LevelManager::CollisionHandler(int i)
     collectables[i].object.Collision();
 
     indexQueue.enqueue(i);
+
     //libera lo spazio in i
     collectables[i].available = true;
 
@@ -324,7 +325,7 @@ void LevelManager::enviromentAnimationRenderer()
             cout << ' ';
 
             gotoPos(ROAD_CENTER, j);
-            SetConsoleTextAttribute(hConsole, 7);
+            SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
 
             if (playerCarCol->leftLine < ROAD_CENTER && playerCarCol->rightLine > ROAD_CENTER)
             {
@@ -360,7 +361,7 @@ void LevelManager::enviromentAnimationRenderer()
             cout << ' ';
 
             gotoPos(ROAD_CENTER, j);
-            SetConsoleTextAttribute(hConsole, 7);
+            SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
 
             if (playerCarCol->leftLine < ROAD_CENTER && playerCarCol->rightLine > ROAD_CENTER)
             {

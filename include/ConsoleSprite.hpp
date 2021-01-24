@@ -14,7 +14,6 @@ struct Collider
 
 };
 
-
 class ConsoleSprite
 {
     protected:
@@ -37,14 +36,12 @@ class ConsoleSprite
         void renderSprite();
         void deleteSprite();
 
+        COORD getPosition();
         Collider* getCollider_ptr();
         bool checkCollision(Collider* to_check);
 
         void SetCharOfAllPixel(char pixChar);
         void SetColorOfAllPixels(WORD Color);
-
-
-        COORD getPosition();
 
         void moveTo(int x, int y);
 

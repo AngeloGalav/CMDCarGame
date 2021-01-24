@@ -2,12 +2,18 @@
 
 ConsoleSprite::ConsoleSprite()
 {
+    for (int i = 0; i < MAX_PIXEL_SIZE; i++)
+    {
+        pixels[i] = Pixel();
+    }
+
     screenPosition.X = 20;
     screenPosition.Y = 5;
 
     pixelCount = 4;
     int i = 0;
-    while (pixelCount > i){                         //questo for genera uno sprite placeholder.
+    while (pixelCount > i)
+    {                         //questo for genera uno sprite placeholder.
         pixels[i].position.X = screenPosition.X+i;
         pixels[i].position.Y = screenPosition.Y+i;
         pixels[i].color = BACKGROUND_CYAN;
@@ -19,6 +25,11 @@ ConsoleSprite::ConsoleSprite()
 
 ConsoleSprite::ConsoleSprite(char* directory, int x, int y, HANDLE thConsole)
 {
+    for (int i = 0; i < MAX_PIXEL_SIZE; i++)
+    {
+        pixels[i] = Pixel();
+    }
+
     screenPosition.X = x;
     screenPosition.Y = y;
     loadFromFile(directory);
@@ -142,7 +153,7 @@ void ConsoleSprite::loadFromFile(char* directory)
             } else if (ch == 'l')
             {   //lightblue_character, blue_background
                 pixels[i].color = BLUE_B_CYAN_F;
-                pixels[i].pixChar = (char) CHAR_HIGH_SQUARE;
+                pixels[i].pixChar = CHAR_HIGH_SQUARE;
             }
 
             pixels[i].position.Y = coords.Y + screenPosition.Y;
@@ -258,18 +269,11 @@ void ConsoleSprite::calculate_RightLeftLine()
 {
     int mx = 0;
     int mn = 0;
-    for (int i=0; i < pixelCount; i++)
+    for (int i = 0; i < pixelCount; i++)
     {
         //finds the farthest pixel on the right and on the left, so that even unusual shapes are supported.
-        if (pixels[mx].position.X < pixels[i].position.X)
-        {
-            mx = i;
-        }
-
-        if (pixels[mn].position.X > pixels[i].position.X)
-        {
-            mn = i;
-        }
+        if (pixels[mx].position.X < pixels[i].position.X) mx = i;
+        if (pixels[mn].position.X > pixels[i].position.X) mn = i;
     }
 
     rect_collider.rightLine = pixels[mx].position.X;
@@ -381,6 +385,7 @@ void ConsoleSprite::printSinglePixelInfo(COORD* windowCursor)
         windowCursor->Y++;
     }
 }
+
 /**
     Stampa la posizione dello sprite.
 */

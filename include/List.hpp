@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include "Pixel.hpp"
+#include <iomanip>
 
 struct level_info
 {
@@ -12,26 +13,49 @@ struct level_info
 
 //Classe lista. Funziona come una queue.
 
-class infolist
+class InfoList
 {
     private:
         level_info level;
 
     public:
-        infolist *prev;
-        infolist *next;
+        InfoList *prev;
+        InfoList *next;
 
-        infolist();
-        infolist(int level_number, int points, int n_gas_tanks, int n_mud);
+        InfoList();
+        InfoList(int level_number, int points, int n_gas_tanks, int n_mud);
 
         void setLevelInfo(int level_number, int points, int n_gas_tanks, int n_mud);
         void printLevelInfo();
 
         void deleteFirst();
         void deleteLast();
-        void addElement(infolist* toAdd);
+        void addElement(InfoList* toAdd);
 };
 
-typedef infolist* ptr_list;
+
+struct biList
+{
+    unsigned int index;
+    biList *next;
+    biList *prev;
+};
+
+//lista degli indici liberi in levelManager.
+class IndexQ
+{
+    protected:
+        biList* coda;
+        biList* testa;
+
+    public:
+        IndexQ();
+        IndexQ(int index);
+
+        void debugPrint();
+        void enqueue(int toEnqueue);
+        int dequeue();
+};
+
 
 #endif // LIST_HPP

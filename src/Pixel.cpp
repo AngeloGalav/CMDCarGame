@@ -14,24 +14,35 @@ Pixel::Pixel()
     pixChar = ' ';
 }
 
-//renderizza il pixel (lo mostra su schermo)
+/**
+    Renderizza il pixel monstrandolo sullo schermo.
+
+    @params:hConsole, puntatore al framebuffer.
+*/
 void Pixel::RenderPixel(HANDLE hConsole)
 {
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
+    SetConsoleCursorPosition(hConsole, position);
     SetConsoleTextAttribute(hConsole, color);
     cout << pixChar;
 }
 
-//function for deleting the pixel (essentially it sets the pixel to black)
+/**
+    Elimina il pixel, rendendolo nero.
+
+    @params:hConsole, puntatore al framebuffer.
+            previousCursor, il cursore vecchio del renderer.
+*/
 void Pixel::BlankPixel(HANDLE hConsole, COORD previousCursor)
 {
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), previousCursor);
+    SetConsoleCursorPosition(hConsole, previousCursor);
     //set color to black (since the street is black)
     SetConsoleTextAttribute(hConsole, 0x00);
     cout << ' ';
 }
 
-//debugInfo
+/**
+    Stampa le coordinate del pixel. Usato per debugging.
+*/
 void Pixel::printPixelInfo()
 {
     cout << position.X << ", " << position.Y << " ";

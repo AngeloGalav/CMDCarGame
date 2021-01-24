@@ -1,6 +1,5 @@
 #include "ConsoleSprite.hpp"
 
-
 ConsoleSprite::ConsoleSprite()
 {
     screenPosition.X = 20;
@@ -8,28 +7,38 @@ ConsoleSprite::ConsoleSprite()
 
     pixelCount = 4;
     int i = 0;
-    while (pixelCount > i){
+    while (pixelCount > i){                         //questo for genera uno sprite placeholder.
         pixels[i].position.X = screenPosition.X+i;
         pixels[i].position.Y = screenPosition.Y+i;
         pixels[i].color = BACKGROUND_CYAN;
         i++;
     }
     generateCollider();
-    object_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
-ConsoleSprite::ConsoleSprite(char* directory, int x, int y)
+ConsoleSprite::ConsoleSprite(char* directory, int x, int y, HANDLE thConsole)
 {
     screenPosition.X = x;
     screenPosition.Y = y;
     loadFromFile(directory);
     generateCollider();
+    setConsoleHandle(thConsole);
+}
+
+/**
+    Setta il puntatore al frame buffer dello sprite.
+    @params: thConsole, puntatore al framebuffer.
+*/
+void ConsoleSprite::setConsoleHandle(HANDLE thConsole)
+{
+    hConsole = thConsole;
 }
 
 /**
 *   Renderizza lo sprite su schermo.
 */
-void ConsoleSprite::renderSprite(HANDLE hConsole)
+void ConsoleSprite::renderSprite()
 {
     int i=0;
     while (pixelCount > i){
@@ -39,9 +48,9 @@ void ConsoleSprite::renderSprite(HANDLE hConsole)
 }
 
 /**
- * elimina lo sprite su schermo
- */ 
-void ConsoleSprite::deleteSprite(HANDLE hConsole)
+ * Elimina lo sprite su schermo
+ */
+void ConsoleSprite::deleteSprite()
 {
     int i=0;
     while (pixelCount > i)
@@ -50,7 +59,11 @@ void ConsoleSprite::deleteSprite(HANDLE hConsole)
         i++;
     }
 }
+/**
+    Carica e decodifica gli sprite da un file .txt, creando uno sprite.
 
+    @params: directory, la posizione del file nel computer.
+*/
 void ConsoleSprite::loadFromFile(char* directory)
 {
     pixelCount = 0;
@@ -66,70 +79,70 @@ void ConsoleSprite::loadFromFile(char* directory)
     //l'intera funzione decodifica il file finchè i caratteri non sono finiti.
     while (fin1 >> noskipws >> ch) //decodifica carattere per carattere
                                    //no skipws = non si skippano gli spazi bianchi
-    {                              
+    {
         coords.X++;
         if (ch != ' ' && ch != '\n') //salta il carattere vuoto
         {
             pixelCount++;
             if (ch == 'r')
             {   //red_backgroud
-                pixels[i].color = 193;
+                pixels[i].color = RED_B_GREEN_F;
                 pixels[i].pixChar = ' ';
 
             } else if (ch == 'g')
             {   //grey_backgroud
-                pixels[i].color = 136;
+                pixels[i].color = BACKGROUND_GREY;
                 pixels[i].pixChar = ' ';
 
             } else if (ch == 'b')
             {   //lightblue_character, red_background
-                pixels[i].color = 203;
-                pixels[i].pixChar = (char) 223; //quadrato alto
+                pixels[i].color = RED_B_CYAN_F;
+                pixels[i].pixChar = CHAR_HIGH_SQUARE; //quadrato alto
 
             } else if (ch == 'y')
             {   //yellow_char, red_background
-                pixels[i].color = 206;
-                pixels[i].pixChar = (char) 223; //alto
+                pixels[i].color = RED_B_YELLOW_F;
+                pixels[i].pixChar = CHAR_HIGH_SQUARE; //alto
 
             } else if (ch == 'p')
             {   //grey_char, black_background
-                pixels[i].color = 8;
-                pixels[i].pixChar = (char) 220; //basso
+                pixels[i].color = BLACK_B_GREY_F;
+                pixels[i].pixChar = CHAR_LOW_SQUARE; //basso
 
             } else if (ch == 'e')
             {   //red_char, yellow_background
-                pixels[i].color = 206;
-                pixels[i].pixChar = (char) 220;
+                pixels[i].color = RED_B_YELLOW_F;
+                pixels[i].pixChar = CHAR_LOW_SQUARE;
 
             } else if (ch == 'x')
             {   //ocra char, brown ocra
-                pixels[i].color = 70;
-                pixels[i].pixChar = (char) 223;
+                pixels[i].color = GOLD_B_BROWN_F;
+                pixels[i].pixChar = CHAR_HIGH_SQUARE;
 
             } else if (ch == 'm')
             {   //ocra background
-                pixels[i].color = 102;
+                pixels[i].color = BACKGROUND_GOLD;
                 pixels[i].pixChar = ' ';
 
             } else if (ch == 'o')
             {   //ocra char, black background
-                pixels[i].color = 006;
-                pixels[i].pixChar = (char) 220;
+                pixels[i].color = BLACK_B_GOLD_F;
+                pixels[i].pixChar =  CHAR_LOW_SQUARE;
 
             } else if (ch == 's')
             {   //black char, ocra background
-                pixels[i].color = 006;
-                pixels[i].pixChar = (char) 223;
+                pixels[i].color = BLACK_B_GOLD_F;
+                pixels[i].pixChar = CHAR_HIGH_SQUARE;
 
             } else if (ch == 'd')
             {   //blue_background
-                pixels[i].color = 155;
+                pixels[i].color = BLUE_B_CYAN_F;
                 pixels[i].pixChar = ' ';
 
             } else if (ch == 'l')
             {   //lightblue_character, blue_background
-                pixels[i].color = 155;
-                pixels[i].pixChar = (char) 223;
+                pixels[i].color = BLUE_B_CYAN_F;
+                pixels[i].pixChar = (char) CHAR_HIGH_SQUARE;
             }
 
             pixels[i].position.Y = coords.Y + screenPosition.Y;
@@ -146,7 +159,36 @@ void ConsoleSprite::loadFromFile(char* directory)
     fin1.close();
 }
 
-//move to a certain position
+
+/**
+    Mette tutti i pixel a un colore.
+    Usato nel lightweight renderer.
+*/
+void ConsoleSprite::SetColorOfAllPixels(WORD Color)
+{
+    for(int i = 0; i < pixelCount; i++)
+    {
+        pixels[i].color = Color;
+    }
+}
+
+/**
+    Mette tutti i pixel a un carattere.
+    Usato nel lightweight renderer.
+*/
+void ConsoleSprite::SetCharOfAllPixel(char pixChar)
+{
+      for(int i = 0; i < pixelCount; i++)
+    {
+        pixels[i].pixChar = pixChar;
+    }
+}
+
+/**
+    Trasla di (x,y) l'elemento.
+
+    @params: x e y, le coordinate di traslazione.
+*/
 void ConsoleSprite::translate(int x, int y)
 {
     //update the position
@@ -167,18 +209,22 @@ void ConsoleSprite::translate(int x, int y)
     }
 }
 
-//al contrario di translate, moveTo permette di mettere un oggetto in una posizione precisa
+/**
+    Al contrario di translate, moveTo permette di posizionare un oggetto in una posizione precisa.
+
+    @params: x e y, le coordinate al quale l'oggetto verrà spostato.
+*/
 void ConsoleSprite::moveTo(int x, int y)
 {
     int xVariation = x - screenPosition.X;
     int yVariation = y - screenPosition.Y;
 
-    //position update
+    //update della posizione
     screenPosition.X = x;
     screenPosition.Y = y;
 
-    //collider fix/update
-    rect_collider.bottomLine += yVariation; //(+1 perche comincia da 0)
+    //collider update
+    rect_collider.bottomLine += yVariation;
     rect_collider.topLine += yVariation;
     rect_collider.leftLine += xVariation;
     rect_collider.rightLine += xVariation;
@@ -193,15 +239,21 @@ void ConsoleSprite::moveTo(int x, int y)
 }
 
 
-//genera/calcola i bordi dello sprite per ottimizzare le collisioni
+/**
+    Genera/calcola i bordi dello sprite per permettere la collision detection.
+*/
 void ConsoleSprite::generateCollider()
 {
-    rect_collider.bottomLine = pixels[pixelCount-1].position.Y; //possible thanks to how sprite decoding works (last pixel is always bottom)
-    rect_collider.topLine = pixels[0].position.Y;
+    rect_collider.bottomLine = pixels[pixelCount-1].position.Y; //usare questo metodo per il calcolo del collider in basso è possibile grazie a come funziona
+    rect_collider.topLine = pixels[0].position.Y;               //la decodifica degli sprite.
 
     calculate_RightLeftLine();
 }
 
+/**
+    Calcola qual e' il pixel piu' esposto a destra e a sinistra dello sprite,
+    in modo da poter generare i collider ponendoli su questi due pixel.
+*/
 void ConsoleSprite::calculate_RightLeftLine()
 {
     int mx = 0;
@@ -225,9 +277,10 @@ void ConsoleSprite::calculate_RightLeftLine()
 }
 
 /**
-    Funzione usata per renderizzare i collider di ciascuno sprite su schermo.
+    Renderizza i collider di ciascuno sprite su schermo.
+    Usata durante la devMode per mostrare i collider.
 */
-void ConsoleSprite::renderColliders(HANDLE hConsole)
+void ConsoleSprite::renderColliders()
 {
     COORD coord;
 
@@ -250,12 +303,15 @@ void ConsoleSprite::renderColliders(HANDLE hConsole)
     cout << "o";
 }
 
-
-void ConsoleSprite::deleteCollider_render(HANDLE hConsole)
+/**
+    Elimina il render del collider durante la devMode. Usata per impedire il ghosting
+    causato dai collider durante la modalità developer.
+*/
+void ConsoleSprite::deleteCollider_render()
 {
     COORD coord;
 
-    SetConsoleTextAttribute(hConsole, BACKGROUND_BLACK);
+    SetConsoleTextAttribute(hConsole, BLACK_B_GREEN_F);
     coord.X = rect_collider.leftLine;
     coord.Y = rect_collider.topLine;
     SetConsoleCursorPosition(hConsole, coord);
@@ -274,21 +330,25 @@ void ConsoleSprite::deleteCollider_render(HANDLE hConsole)
     cout << " ";
 }
 
+
+/** Getter del collider dell'elemento */
 Collider* ConsoleSprite::getCollider_ptr()
 {
     return &rect_collider;
 }
 
+/** Getter della posizione */
 COORD ConsoleSprite::getPosition()
 {
     return screenPosition;
 }
 
-void ConsoleSprite::printSpritePosition()
-{
-    cout << screenPosition.X  << ", " << screenPosition.Y << " ";
-}
+/**
+    Confronta i collider di questo oggetto e un altro per verificare
+    se è avvenuta una collisione.
 
+    @params: ptr_collider_elem, il puntatore al collider del secondo oggetto.
+*/
 bool ConsoleSprite::checkCollision(Collider* ptr_collider_elem)
 {
        return ((rect_collider.topLine <= ptr_collider_elem->bottomLine && rect_collider.topLine >= ptr_collider_elem->topLine)
@@ -301,27 +361,31 @@ bool ConsoleSprite::checkCollision(Collider* ptr_collider_elem)
 }
 
 
-/**
-    DEBUG STUFF
-*/
+///FUNZIONI DI DEBUGGING///
 
-//debugInfo, functions used for debugging (unused in final version/nonDev mode)
-COORD ConsoleSprite::printSinglePixelInfo(HANDLE hConsole, COORD windowCursor)
+/**
+    Stampa le informazioni di ogni singolo pixel sullo schermo.
+
+    @params: windowCursor, il cursore usato dalla funzione.
+            Il passaggio è per riferimento siccome voglio salvare
+            le modifiche al cursore usato nella funzione precedente.
+*/
+void ConsoleSprite::printSinglePixelInfo(COORD* windowCursor)
 {
     int i = 0;
     while (pixelCount > i){
-        SetConsoleCursorPosition(hConsole, windowCursor);
+        SetConsoleCursorPosition(hConsole, *windowCursor);
         cout << "pixelNumber " << i+1 << ':';
         pixels[i].printPixelInfo();
         i++;
-        windowCursor.Y++;
+        windowCursor->Y++;
     }
-
-    return windowCursor;
-
 }
-
-void ConsoleSprite::printAddressDebug()
+/**
+    Stampa la posizione dello sprite.
+*/
+void ConsoleSprite::printSpritePosition()
 {
-    cout << &pixels[pixelCount-1].position.Y << ", " << rect_collider.bottomLine;
+    cout << screenPosition.X  << ", " << screenPosition.Y << " ";
 }
+

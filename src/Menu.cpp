@@ -1,17 +1,21 @@
 #include "Menu.hpp"
 
-Menu::Menu(int width,int height)
+Menu::Menu()
 {
-    this->height = height;
-    this->width = width;
+    height = SCREEN_HEIGHT;
+    width = SCREEN_WIDTH;
     position.X = 0;
     position.Y = height - 34;
     exit = false;
     devModeEnabler = false;
+    lightWeightEnabler = false;
     SetWindow();
 
 }
 
+/**
+    Crea la finestra del menu.
+*/
 void Menu::SetWindow()
 {
     _COORD coord;
@@ -28,16 +32,18 @@ void Menu::SetWindow()
     SetConsoleScreenBufferSize(hconsole, coord);  //set buffer size (to fix the window size)
     SetConsoleWindowInfo(hconsole, TRUE, &Rect);  //set window size, the second parameter indicates how coordinates should be calculated.
                                                 //(in this case, is from top to bottom (0 from top))
-
 }
 
+/**
+    Mostra l'how to play.
+*/
 void Menu::howToPlay()
 {
-    SetConsoleTextAttribute(hconsole, 10); //13 is purple, 10 is green
+    SetConsoleTextAttribute(hconsole, BLACK_B_GREEN_F);
     back_to_main = false;
     system("cls");
 
-    position.Y = height - 34;
+    position.Y = 10;
 
     char directory[25];
     strcpy(directory, "menu/howto.txt");
@@ -56,13 +62,16 @@ void Menu::howToPlay()
     MainMenu();
 }
 
+/**
+    Menu di Game Over.
+*/
 void Menu::GameOverMenu()
 {
+    SetConsoleTextAttribute(hconsole, BLACK_B_BLACK_F);
     SHORT CursorMenuStartPosition = 0;
-    SetConsoleTextAttribute(hconsole, 10);
     system("cls");
 
-    position.Y = height - 34;
+    position.Y = 10;
 
     bool stop = false;
     int index = 0;
@@ -71,11 +80,11 @@ void Menu::GameOverMenu()
     strcpy(directory, "menu/gameover.txt");
 
     //change text color
-    SetConsoleTextAttribute(hconsole, 13);
+    SetConsoleTextAttribute(hconsole, BLACK_B_PURPLE_F);
     printTextFile(directory, true, width, position.Y);
 
     //menu entries
-    SetConsoleTextAttribute(hconsole, BACKGROUND_BLACK);
+    SetConsoleTextAttribute(hconsole, BLACK_B_WHITE_F);
     position.X = width/2 - (73-50)/2 - 3;
 
     position.Y += 4;
@@ -88,10 +97,10 @@ void Menu::GameOverMenu()
     cout << "# Exit";
 
     position.Y += 3;
-    position = printStats(position);
+    printStats();
 
     position.Y += 2;
-    displayPoints(position);
+    displayPoints();
 
     while(!stop)
     {
@@ -99,14 +108,14 @@ void Menu::GameOverMenu()
         position.X = 70;
 
         SetConsoleCursorPosition(hconsole,position);
-        SetConsoleTextAttribute(hconsole, 0x00);
+        SetConsoleTextAttribute(hconsole, BLACK_B_BLACK_F);
 
-        cout << "              " ;
+        cout << "             " ;
         //codice del rendering della freccetta lol
         position.Y = CursorMenuStartPosition + index;
 
         SetConsoleCursorPosition(hconsole,position);
-        SetConsoleTextAttribute(hconsole, 11);
+        SetConsoleTextAttribute(hconsole, BLACK_B_CYAN_F);
         cout << "<--  ";
 
         Sleep(100);
@@ -140,15 +149,18 @@ void Menu::GameOverMenu()
     }
 }
 
+/**
+    Mostra il menu principale.
+*/
 void Menu::MainMenu()
 {
-    //save menu entries Y in order to know where to draw the cursor
+    //posizione di inzio del menu.
     SHORT CursorMenuStartPosition = 0;
 
-    //title color
-    SetConsoleTextAttribute(hconsole, 12); //12
-    position.X = width - 73;
-    position.Y = height - 34;
+    //colore del titolo
+    SetConsoleTextAttribute(hconsole, BLACK_B_RED_F); //12
+    position.X = 0;
+    position.Y = 10;
 
     bool stop = false;
     int index = 0; //index of menu cursor
@@ -157,15 +169,15 @@ void Menu::MainMenu()
     strcpy(directory, "menu/title.txt");
     printTextFile(directory, true, width, position.Y);
 
-    SetConsoleTextAttribute(hconsole, 14); //12
+    SetConsoleTextAttribute(hconsole, BLACK_B_YELLOW_F);
 
     position.Y += 2;
     strcpy(directory, "menu/titlebar.txt");
     printTextFile(directory, true, width, position.Y);
 
     //menu entries
-    SetConsoleTextAttribute(hconsole, 7);
-    position.X = width/2 - (73-50)/2 - 3;
+    SetConsoleTextAttribute(hconsole, BLACK_B_WHITE_F);
+    position.X = 42;
 
     position.Y += 2;
     CursorMenuStartPosition = position.Y;
@@ -178,7 +190,17 @@ void Menu::MainMenu()
 
     position.Y++;
     SetConsoleCursorPosition(hconsole,position);
-    //devMode entries have spaces to easily fix ghosting
+
+    if (lightWeightEnabler){
+        cout << "# Enable RTX                  ";
+    } else
+    {
+        cout << "# Disable RTX                 ";
+    }
+
+    position.Y++;
+    SetConsoleCursorPosition(hconsole,position);
+
     if (!devModeEnabler){
         cout << "# Enable DEVMODE                ";
     } else
@@ -197,17 +219,16 @@ void Menu::MainMenu()
 
     while(!stop)
     {
-
         position.X = 68;
 
         SetConsoleCursorPosition(hconsole,position);
-        SetConsoleTextAttribute(hconsole, 0x00);
+        SetConsoleTextAttribute(hconsole, BLACK_B_BLACK_F);
         cout << "              " ;
 
         //codice del rendering della freccetta
         position.Y = CursorMenuStartPosition + index;
         SetConsoleCursorPosition(hconsole,position);
-        SetConsoleTextAttribute(hconsole, 11);
+        SetConsoleTextAttribute(hconsole, BLACK_B_CYAN_F);
         cout << "<--  ";
 
         Sleep(100);
@@ -218,22 +239,22 @@ void Menu::MainMenu()
             index--;
             if(index < 0)
             {
-                index = 3;
+                index = 4;
             }
         }
         else if(GetAsyncKeyState(VK_DOWN) != 0)
         {
             index++;
-            if(index == 4)
+            if(index == 5)
             {
                 index = 0;
             }
         }
         else if(GetAsyncKeyState(VK_RETURN) !=0)
         {
-            if(index == 0)
+            if (index == 0)
             {
-                //using stop bool manipulation in order to exit from the loop and to avoid using break
+                //setto stop = true per uscire dal loop.
                 stop = true;
             }
             else if (index == 1)
@@ -245,12 +266,18 @@ void Menu::MainMenu()
             else if (index == 2)
             {
                 stop = true;
-                devModeEnabler = !devModeEnabler;
+                lightWeightEnabler = !lightWeightEnabler;
                 MainMenu();
             }
             else if (index == 3)
             {
-                //the exit bool is public, and can be read by the main in order to exit the application
+                stop = true;
+                devModeEnabler = !devModeEnabler;
+                MainMenu();
+            }
+            else if (index == 4)
+            {
+                //l'exit bool è public, in modo da essere letto da tutti senza getter.
                 exit = true;
                 stop = true;
             }
@@ -258,6 +285,21 @@ void Menu::MainMenu()
     }
 }
 
+/**
+    Ritorna il valore booleano exit.
+*/
+bool Menu::exitMenu()
+{
+    return exit;
+}
+
+/**
+    Stampa il un file di testo, centrandolo se richiesto.
+
+    @params: directory, posizione del file nel computer.
+             centered, true se si vuole il testo centrato, false altrimenti
+             x e y, posizione dell'elemento. (coordinate usate SOLO se non si centra il testo)
+*/
 void Menu::printTextFile(char* directory, bool centered, int x, int y)
 {
     char ch;
@@ -288,16 +330,16 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
         position.X = x/2 - mxChar/2;
 
 
-        //fstream closes automatically, but it is best practice to close when you've finished to use it
+        //fstream si chiude automaticamente, ma è buona pratica chiuderlo manualmente quando si finisce di usarlo.
         fin.close();
     } else
     {
-        //se il testo non deve essere centrato, allora mettilo nella posizione di default
+        //se il testo non deve essere centrato, allora lo mette nella posizione di default
         position.X = x;
     }
-    SetConsoleCursorPosition(hconsole,position);
+    SetConsoleCursorPosition(hconsole, position);
 
-    //secondo filestream per stampare il documento nel gioco
+    //secondo filestream per stampare effettivamente il documento nel gioco
     fstream fin1(directory, fstream::in);
     while (fin1 >> noskipws >> ch)
     {
@@ -316,7 +358,7 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
 /**
     Prende la lista delle statistische da mostrare dal levelmanager.
 */
-void Menu::saveStats(ptr_list to_retrieve)
+void Menu::saveStats(InfoList* to_retrieve)
 {
     stats_from_level = to_retrieve->prev;
 }
@@ -324,7 +366,7 @@ void Menu::saveStats(ptr_list to_retrieve)
 /**
     Prende il numero totale di punti dal levelmanager.
 */
-void Menu::savePoints(int points)
+void Menu::saveScore(int points)
 {
     points_from_level = points;
 }
@@ -332,46 +374,49 @@ void Menu::savePoints(int points)
 /**
     Mostra il numero totale di punti su schermo.
 */
-void Menu::displayPoints(COORD position)
+void Menu::displayPoints()
 {
     position.X = 19;
-    SetConsoleCursorPosition(hconsole,position);
-    SetConsoleTextAttribute(hconsole, 12);
+    SetConsoleCursorPosition(hconsole, position);
+    SetConsoleTextAttribute(hconsole, BLACK_B_RED_F);
     cout << "Total points: " << points_from_level;
 }
 
 
 /**
-    Stampa le statistiche degli ultimi 10 livelli.
+    Stampa le statistiche degli ultimi 10 livelli,
+    in modo ricorsivo.
 */
-COORD Menu::printStats(COORD position)
+void Menu::printStats()
 {
     position.X = 19;
     SetConsoleCursorPosition(hconsole,position);
-    SetConsoleTextAttribute(hconsole, 10);
+    SetConsoleTextAttribute(hconsole, BLACK_B_WHITE_F);
 
     cout << "Previous levels stats: ";
     position.Y++;
     SetConsoleCursorPosition(hconsole,position);
-    SetConsoleTextAttribute(hconsole, BACKGROUND_BLACK);
+    SetConsoleTextAttribute(hconsole, BLACK_B_GREEN_F);
 
     if (stats_from_level != NULL)
     {
-        int i = 0;
-        while (stats_from_level != NULL && i < 10)
-        {
-            cout << "- ";
-            stats_from_level->printLevelInfo();
-            position.Y++;
-            SetConsoleCursorPosition(hconsole,position);
-            stats_from_level = stats_from_level->prev;
-            i++;
-        }
+        printStatsRec(0);
     } else cout << "No statistics to display :-(";
-
-    return position;
 }
 
+void Menu::printStatsRec(int nline)
+{
+    if (stats_from_level != NULL && nline < 10)
+    {
+        cout << "- ";
+        stats_from_level->printLevelInfo();
+        position.Y++;
+        SetConsoleCursorPosition(hconsole,position);
+        stats_from_level = stats_from_level->prev;
+        nline++;
+        printStatsRec(nline);
+    }
+}
 
 
 

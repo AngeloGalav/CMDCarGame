@@ -7,92 +7,92 @@
 #include <string>
 #include <time.h>
 
-//TODO: change maxObjectOnScreen to private.
-//TODO: change LevelVelocity by making it IN levelManager and OUTSIDE of the car class
+struct CollectableMemory    //è true se dentro il posto è libero, false altrimenti.
+{
+    bool available;
+    Collectable object;
+};
+
 
 class LevelManager
 {
     protected:
         //spawner variables
         int timeToWaitForSpawn;
-        int randomValue;
-        int onScreenObjects;
-        int time; //iterazioni da un momento a un altro
-        int availableObjects; //oggetti che possiamo spawnare
+        int time; //numero di iterazioni svolte ad ogni spawn.
+        int availableObjects; //numero di oggetti che possiamo spawnare
 
-        //the index of the level
-        int levelCounter;
-        int levelCounterFloor; //used to know when to start reducing the level difficulty parameters
-        int pointsUpperBound;
+        //Funzioni di estetica
+        void enviromentAnimationRenderer();
+        bool frameAnimationEnvBool;
+        void drawBackground();
+        void gotoPos(int x, int y);
 
-        //enviroment aestetics functions:
-        void enviromentAnimationRenderer();  //this renders the frame of the moving background
-        bool frameAnimationEnvBool;          //this is used to change between frames of the background animation
-        void drawBackground();               //this is used to render the background which does not move
-        void gotoPos(int x, int y);          //these are used to handle the rendering without using the pixel class (for optimization)
-
-        //UI elements
+        //UI elementi ui
         void UIGameInfo();
         void UIGameInfoInit();
 
-        //handle of console window
+        //puntatore al framebuffer
         HANDLE hConsole;
 
-        //game parameters
+        //paramentri di gioco
         int game_speed;
         int points;
         int speed_decrementer;
+        int levelCounter;
+        int levelCounterFloor; //variabile usata per sapere quando smettere di aumentare la difficoltà (e quando ricominciare)
+        int pointsUpperBound;
 
-        //level statistics system
-        infolist* level_list;
+
+        //Sistema delle statistiche
+        InfoList* level_list;
         unsigned int list_size;
         unsigned int puddle_counter;
         unsigned int gas_tanks_counter;
         void addStats();
         int totalPoints;
 
-        //Game mechanics functions
+        //Meccaniche di gioco
         void CollisionHandler(int i);
         void Spawn();
-        void checkColliders(); //program events
+        void checkColliders();
         void manualAccelerator();
         void playerGameMechanics();
 
+        //Tipi di oggetti.
+        Collectable gas;
+        Collectable puddle;
+        Collectable enemyCar;
+        CollectableMemory collectables[MAX_ON_SCREEN_OBJECTS]; //Memoria contentente i riferimenti agli oggetti su schermo;
+        Car playerCar;
+
+        Collider* playerCarCol;//usato per sistemare il bug con linea di mezzeria
+
+        IndexQ indexQueue;
+        bool isDead;
 
     public:
         LevelManager(HANDLE thConsole);
         LevelManager(HANDLE thConsole, Car player, Collectable gas);
 
-        //the index of the level
-        Collectable collectables[MAX_ON_SCREEN_OBJECTS]; //objects on screen;
-        bool availableCollectablesIndices[MAX_ON_SCREEN_OBJECTS]; //available ""spaces"" on screen
-
-        //devMode enabled or not.
+        //attivatore devMode
         bool devMode;
+        //attivatore lightWeightMode
+        bool lightWeightMode;
 
-        //deathBool
-        bool isDead;
-        //getter di death_bool
         bool isPlayerDead();
 
-        //types of collectables
-        Collectable gas;
-        Collectable puddle;
-        Collectable enemyCar;
-
-        //the player
-        Car playerCar;//("sprites/carSprite.txt", 43, 30);
-
-        //game behaviour methods
+        //metodi ispirati alla classe MonoBehaviour di Unity
         void Start();
         void Update();
 
-        //function used to send stats to main menu
-        infolist* getStats();
+        //funzioni usate per passare i dati al menu
+        InfoList* getStats();
         int getTotalPoints();
 
-        //debug functions
+        //funzioni di debugging.
         int getGameSpeed();
-
+        Car* getPlayerCarPtr();
+        IndexQ* getQueuePtr();
 };
 #endif // LEVELMANAGER_HPP

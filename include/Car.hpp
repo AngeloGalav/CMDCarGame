@@ -14,12 +14,13 @@ class Car : public ConsoleSprite
     public:
         //contructors
         Car();
-        Car(char* directory, int x, int y);
+        Car(char* directory, int x, int y, HANDLE thConsole);
 
-        //function for car movement by keyboard
-        void Movement(HANDLE hConsole);
+        //funzioni per il movimento della macchina via tastiera.
+        void Movement();
+        void optimized_Movement();
 
-        //sets boundaries for car
+        //setta i limiti di movimento della macchina
         void setBoundaries(int leftWall, int rightWall, int upWall, int downWall);
 
 };

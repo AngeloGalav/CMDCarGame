@@ -7,7 +7,7 @@ Collectable::Collectable() : ConsoleSprite()
     effect = 0;
 }
 
-Collectable::Collectable(char* directory, int ef, CollectableType elem_type) : ConsoleSprite(directory, 0, 0)
+Collectable::Collectable(char* directory, int ef, CollectableType elem_type, HANDLE thConsole) : ConsoleSprite(directory, 0, 0, thConsole)
 {
     collectable_type = elem_type;
     stop = false;
@@ -27,19 +27,21 @@ int Collectable::getEffect()
 /**
     Muove in avanti l'oggetto, finché non incontra
     il fondo dello schermo.
-
-    @params: hConsole, il puntatore al framebuffer.
 */
-void Collectable::moveForward(HANDLE hConsole)
+void Collectable::moveForward()
 {
     if (rect_collider.bottomLine <= LOWER_SCREEN_BOUNDARY && !stop)
     {
-        deleteSprite(hConsole);
+        deleteSprite();
         translate(0, 1);
-        renderSprite(hConsole);
+        renderSprite();
     }
 }
 
+/**
+    Ritorna il tipo dell'oggetto. Usato per il conteggio degli elementi
+    in LevelManager.
+*/
 CollectableType Collectable::getTypeOfCollectable()
 {
     return collectable_type;
@@ -51,18 +53,17 @@ CollectableType Collectable::getTypeOfCollectable()
     (permettendo così il loro riutilizzo da parte di un nuovo elemento.)
     Lo sprite dell'oggetto viene poi cancellato dall'area di gioco.
 
-    @params: hConsole, il puntatore al framebuffer.
 */
-void Collectable::Collision(HANDLE hConsole)
+void Collectable::Collision()
 {
-    //stop the object
+    //ferma l'oggetto.
     if (!stop)
     {
-        deleteSprite(hConsole);
+        deleteSprite();
     }
     stop = true;
 
-    //deleteCollider by offsetting it temporarily
+    //elemina il collider dandogli un offset molto grande.
     rect_collider.bottomLine = DELETED_COL;
     rect_collider.leftLine = DELETED_COL;
     rect_collider.topLine = DELETED_COL;

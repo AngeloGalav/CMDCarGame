@@ -14,33 +14,31 @@ class Menu
         int width;
         int height ;
         void printTextFile(char* directory, bool centered, int x, int y);
-        COORD printStats(COORD position);
-        void displayPoints(COORD position);
+        void printStats();
+        void printStatsRec(int nline);
+        void displayPoints();
 
-        ptr_list stats_from_level;
+        InfoList* stats_from_level;
         int points_from_level;
-
+        bool exit;
 
         HANDLE hconsole;
 
-        //menu design variables:
-
-        int entries_spacing;    //TODO: WHAT TO DO WITH THIS?
-
     public:
         //constructor
-        Menu(int width,int height);
+        Menu();
         bool devModeEnabler;
+        bool lightWeightEnabler;
         bool back_to_main;
 
-        bool exit;
+        bool exitMenu();
         void SetWindow();
         void howToPlay();
         void MainMenu();
         void GameOverMenu();
 
-        void saveStats(ptr_list to_retrieve);
-        void savePoints(int points);
+        void saveStats(InfoList* to_retrieve);
+        void saveScore(int points);
 };
 
 #endif // MENU_HPP

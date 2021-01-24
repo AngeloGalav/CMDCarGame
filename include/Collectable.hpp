@@ -3,7 +3,8 @@
 #include "ConsoleSprite.hpp"
 #include "Car.hpp"
 
-enum CollectableType {
+enum CollectableType
+{
     UnknownCollectable = -1,
     EnemyCar = 0,
     Puddle,
@@ -13,24 +14,20 @@ enum CollectableType {
 class Collectable : public ConsoleSprite
 {
     protected:
-        //stop boolean for stopping the object after collision
-        bool stop;
+        bool stop;  //booleano che stoppa l'oggetto dopo una collisione.
         int effect;
         CollectableType collectable_type;
 
     public:
-
         //constructors
         Collectable();
-        Collectable(char* directory, int ef, CollectableType elem_type);
+        Collectable(char* directory, int ef, CollectableType elem_type, HANDLE thConsole);
 
         int getEffect();
-
         CollectableType getTypeOfCollectable();
 
-        void moveForward(HANDLE hConsole);
-
-        void Collision(HANDLE hConsole);
+        void moveForward();
+        void Collision();
 };
 
 #endif // COLLECTABLE_HPP

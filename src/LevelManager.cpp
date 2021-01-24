@@ -1,14 +1,12 @@
 #include "LevelManager.hpp"
 
 //toDO: hConsole trimming.
-//todo: levelProgression bug.
-//TODO: levelMax setting.
 
 LevelManager::LevelManager(HANDLE thConsole)
 {
     hConsole = thConsole;
 
-    char filePath[5][128];
+    char filePath[4][128];
 
     strcpy(filePath[0], "sprites/carSprite.txt");
     strcpy(filePath[1], "sprites/oilSprite.txt");
@@ -16,10 +14,10 @@ LevelManager::LevelManager(HANDLE thConsole)
     strcpy(filePath[3], "sprites/carSprite2.txt");
 
     //inizializzazione oggetti
-    playerCar = Car(filePath[0], 43, 30);
-    gas = Collectable(filePath[1], 300, Gas);
-    puddle = Collectable(filePath[2], -100, Puddle);
-    enemyCar = Collectable(filePath[3], -1000, EnemyCar);
+    playerCar = Car(filePath[0], 43, 30, hConsole);
+    gas = Collectable(filePath[1], 300, Gas, hConsole);
+    puddle = Collectable(filePath[2], -100, Puddle, hConsole);
+    enemyCar = Collectable(filePath[3], -1000, EnemyCar, hConsole);
 }
 
 /**
@@ -29,8 +27,6 @@ void LevelManager::Start()
 {
     //reinizializzazione dei valori di gioco, così che nulla cambi al restart del gioco
     availableObjects = MAX_ON_SCREEN_OBJECTS;
-    onScreenObjects = 0;
-
     time = 0;
     isDead = false;
 
@@ -43,9 +39,26 @@ void LevelManager::Start()
 
     frameAnimationEnvBool = true;
 
+    if (lightWeightMode)  //se sono in lightMode, metto gli sprite più light, in stile ASCII
+    {
+        playerCar.SetColorOfAllPixels(BLACK_B_CYAN_F);
+        playerCar.SetCharOfAllPixel('@');
+
+        enemyCar.SetColorOfAllPixels(BLACK_B_RED_F);
+        enemyCar.SetCharOfAllPixel('o');
+
+        gas.SetColorOfAllPixels(BLACK_B_GREEN_F);
+        gas.SetCharOfAllPixel('#');
+
+        puddle.SetColorOfAllPixels(BLACK_B_YELLOW_F);
+        puddle.SetCharOfAllPixel('_');
+    }
+
+    playerCarCol = playerCar.getCollider_ptr();
+
     puddle_counter = 0;
     gas_tanks_counter = 0;
-    level_list = new infolist();
+    level_list = new InfoList();
     totalPoints = 0;
 
     pointsUpperBound = 1000;
@@ -53,16 +66,19 @@ void LevelManager::Start()
     playerCar.setBoundaries(LEFT_SCREEN_BOUNDARY + 1, RIGHT_SCREEN_BOUNDARY - 1,
                             UPPER_SCREEN_BOUNDARY + 1, LOWER_SCREEN_BOUNDARY - 1);
 
-    for(int i=0; i < MAX_ON_SCREEN_OBJECTS; i++)
+    indexQueue = IndexQ();
+
+    for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
-        availableCollectablesIndices[i] = true;
-        collectables[i] = Collectable();
+        indexQueue.enqueue(i);
+        collectables[i].available = true;
+        collectables[i].object = Collectable();
     }
 
     drawBackground();
 
     UIGameInfoInit();
-    playerCar.renderSprite(hConsole);
+    playerCar.renderSprite();
 }
 
 /**
@@ -74,35 +90,28 @@ void LevelManager::Update()
 
     UIGameInfo();
 
-    playerCar.renderSprite(hConsole);
+    playerCar.renderSprite();
 
-    //code for collider visualization in DevMode (in this case, we cancel the previus "collider image")
+    //codice per l'eliminazione dei collider, per togliere il ghosting (questo va solo se siamo in devMode)
     if (devMode)
     {
-        //car collider image clearance
-        playerCar.deleteCollider_render(hConsole);
+        playerCar.deleteCollider_render();
 
         for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
         {
-            //ogni slot che non � disponibile � occupato.
-            if (!availableCollectablesIndices[i])
-            {
-                collectables[i].deleteCollider_render(hConsole);
-            }
+            //in ogni slot occupato elimino i collider. (per impedire il ghosting)
+            if (!collectables[i].available) collectables[i].object.deleteCollider_render();
         }
     }
 
-    if (devMode)
-    {
-        manualAccelerator();
-    }
+    if (devMode) manualAccelerator();
 
     playerGameMechanics();
 
     time++;
 
-    //renders the background animaiton
-    enviromentAnimationRenderer();
+    //se non sono in lightMode, attiva l'animazione carina che da il senso di velocità
+    if (!lightWeightMode) enviromentAnimationRenderer();
 
     if (time >= timeToWaitForSpawn && availableObjects > 0)
     {
@@ -110,32 +119,29 @@ void LevelManager::Update()
         time = 0;
     }
 
+    playerCar.optimized_Movement();
+
     for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
-        if (!availableCollectablesIndices[i])
+        if (!collectables[i].available)
         {
-            collectables[i].moveForward(hConsole);
+            //manda avanti ogni collectable.
+            collectables[i].object.moveForward();
 
-            //collider visualization in devMode for sprites
-            if (devMode)
-            {
-                collectables[i].renderColliders(hConsole);
-            }
+            //visualizza i collider di ciascun elemento.
+            if (devMode) collectables[i].object.renderColliders();
         }
     }
 
-    playerCar.Movement(hConsole);
+    //playerCar.Movement(hConsole);
 
-    //collider visualization in devMode for sprites for car
-    if (devMode)
-    {
-        playerCar.renderColliders(hConsole);
-    }
+    //visualizzazione dei collider della macchinina.
+    if (devMode) playerCar.renderColliders();
 
     checkColliders();
 
-    //eliminates annoying ghosting effect
-    playerCar.renderSprite(hConsole); //TODO: DELETE GHOSTING
+    //tolgo il ghosting.
+    playerCar.renderSprite(); //TODO: DELETE GHOSTING
 }
 
 /**
@@ -148,80 +154,46 @@ void LevelManager::playerGameMechanics()
     int prev_game_speed = game_speed;
 
     //aggiunto letteralmente solo perche ci dava fastidio vedere 129 e non 130 per velocita
-    if (game_speed == 21 && !devMode)
-    {
-        game_speed = 20;
-    }
+    //(inoltre in questo modo la velocità diminuisce in modo omogeneo...)
+    if (game_speed == 21 && !devMode) game_speed = 20;
 
     if (points >= pointsUpperBound) //next level
     {
-        //update the StatList...
+        //update della StatList...
         addStats();
 
         points -= pointsUpperBound;
         levelCounter++;
 
-        if (timeToWaitForSpawn > MAX_TIME_TO_WAIT_SPAWN)
-        {
-            timeToWaitForSpawn--;
-        }
+        if (timeToWaitForSpawn > MAX_TIME_TO_WAIT_SPAWN) timeToWaitForSpawn--; //il tempo di spawning diminuisce.. (aumento difficoltà)
 
-        if (game_speed - 20 > 0 && !devMode) //speedbounds
-        {
-            game_speed -= 20;
-        }
-        else
-        {
-            game_speed = 1;
-        }
+        if (game_speed - 20 > 0 && !devMode) game_speed -= 20;
+        else  game_speed = 1;
 
-        if (timeToWaitForSpawn == MAX_TIME_TO_WAIT_SPAWN && game_speed == prev_game_speed)
-        { //punto in cui la difficolt� finisce di aumentare
-            levelCounterFloor++;
-        }
+        //punto in cui la difficolt� finisce di aumentare, e quindi aumento il levelCounter floor.
+        if (timeToWaitForSpawn == MAX_TIME_TO_WAIT_SPAWN && game_speed == prev_game_speed) levelCounterFloor++;
     }
     else if (points < 0) //previous level
     {
-        //update the StatList...
+        //update della StatList...
         addStats();
 
         points =  pointsUpperBound + points;
 
-        if (levelCounter >= 2)
-        {
-            levelCounter--;
-        }
-        else if (!devMode) //se il livello torna a 0, allora muori se points < 0
-        {
-            isDead = true;
-        }
+        if (levelCounter >= 2) levelCounter--;
+        else if (!devMode) isDead = true; //se il tuo livello è minore di 1, allora sei morto.
 
-        if (levelCounterFloor >= 1)
-        { //se la condizione � vera, abbiamo raggiunto la difficolt� massima
-
-            levelCounterFloor--;
-        }
+        //se la condizione � vera, abbiamo raggiunto la difficolt� massima
+        if (levelCounterFloor >= 1) levelCounterFloor--;
         else
-        {    //posso abbassare la difficolt� solo se il livello
+        {    //posso abbassare la difficolt� solo se levelCounterFloor è 0.
+            if (timeToWaitForSpawn < MIN_TIME_TO_WAIT_SPAWN) timeToWaitForSpawn++;
 
-            if (timeToWaitForSpawn < MIN_TIME_TO_WAIT_SPAWN)
-            {
-                timeToWaitForSpawn++;
-            }
-
-            if (game_speed < SPEED_LIMIT ) //speed bounds
-            {
-                game_speed += 20;
-            }
-            else
-            {
-                game_speed = SPEED_LIMIT;
-            }
+            if (game_speed < SPEED_LIMIT ) game_speed += 20;
+            else game_speed = SPEED_LIMIT;
         }
     }
 }
-
-
 
 /**
     Funzione che abilita l'accelerazione manuale, usata in devMode.
@@ -231,7 +203,6 @@ void LevelManager::manualAccelerator()
     if (GetAsyncKeyState(KEY_E) && game_speed < SPEED_LIMIT && devMode) game_speed++; //81 e 69 sono i keycode di E e Q rispettivamente.
     else if (GetAsyncKeyState(KEY_Q) && game_speed > 1 && devMode) game_speed--;
 }
-
 
 /**
     Funzione che controlla i collider di ciascun oggetto nel gioco, per vedere se sbatte contro la macchina.
@@ -243,27 +214,23 @@ void LevelManager::checkColliders()
 {
     for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
-        //check elements that are on screen
-        if (!availableCollectablesIndices[i])
+        if (!collectables[i].available) //per ogni elemento sullo schermo...
         {
-            //element got hit by car
-            Collider* col_ptr = collectables[i].getCollider_ptr();
+            Collider* col_ptr = collectables[i].object.getCollider_ptr();
 
-            if (playerCar.checkCollision(col_ptr))
+            if (playerCar.checkCollision(col_ptr)) //...guarda se c'è una collisione.
             {
-                if (collectables[i].getTypeOfCollectable() == Gas) gas_tanks_counter++;
-                else if (collectables[i].getTypeOfCollectable() == Puddle) puddle_counter++;
+                if (collectables[i].object.getTypeOfCollectable() == Gas) gas_tanks_counter++;
+                else if (collectables[i].object.getTypeOfCollectable() == Puddle) puddle_counter++;
 
-                CollisionHandler(i);
-                points += collectables[i].getEffect();
-                if (collectables[i].getEffect() > 0) totalPoints += collectables[i].getEffect();
+                CollisionHandler(i); //se c'è una collisione, passo il controllo al collisionHandler.
+                points += collectables[i].object.getEffect();
+
+                if (collectables[i].object.getEffect() > 0) totalPoints += collectables[i].object.getEffect();
             }
 
-            //element goes offscreen
-            if (col_ptr->bottomLine > LOWER_SCREEN_BOUNDARY - 1 && col_ptr->bottomLine < DELETED_COL - 1)
-            {
-                CollisionHandler(i);
-            }
+            if (col_ptr->bottomLine > LOWER_SCREEN_BOUNDARY - 2 && col_ptr->bottomLine < DELETED_COL - 1)
+                CollisionHandler(i); //Se l'elemento scompare dello schermo, è come se fosse avvenuta un collisione.
         }
     }
 }
@@ -279,66 +246,52 @@ void LevelManager::checkColliders()
 
 void LevelManager::Spawn()
 {
-    int k = -1;
-    randomValue = rand() % 3;
-
-    int j = 0;
-
-    //find the first available space (true if available, false if not)
-    while  (j < MAX_ON_SCREEN_OBJECTS)
-    {
-        if (availableCollectablesIndices[j])
-        {
-
-            k = j; //k � l'id che scelgo
-            availableCollectablesIndices[j] = false;    //la cella ora non � pi� disponibile (perch� presa)
-            j = MAX_ON_SCREEN_OBJECTS; //Uscita da loop senza break
-        }
-        j++;
-    }
+    int k = indexQueue.dequeue(); //prendi il primo indice della queue
+    int randomValue = rand() % 3;
 
     //se dopo tutti questi passaggi, k � != -1 (quindi si � trovato un posto libero) finalizza lo spawn
     if (k != -1)
     {
-        if (randomValue == 0) collectables[k] = gas;
-        else if (randomValue == 1) collectables[k] = puddle;
-        else if (randomValue == 2) collectables[k] = enemyCar;
+        collectables[k].available = false;
+        if (randomValue == 0) collectables[k].object = gas;
+        else if (randomValue == 1) collectables[k].object = puddle;
+        else if (randomValue == 2) collectables[k].object = enemyCar;
 
         randomValue = rand() % 54 + 11;
-        collectables[k].moveTo(randomValue, 1); //possibile seg fault?
+        collectables[k].object.moveTo(randomValue, 0);
 
-        availableObjects--;
-        onScreenObjects++;
+        Collider* coll = collectables[k].object.getCollider_ptr();
+        if (coll->leftLine < ROAD_CENTER && ROAD_CENTER < coll->rightLine) collectables[k].object.moveTo(ROAD_CENTER + 1, 0);
+
+        availableObjects--; /** check if you still need this HERE**/
 
         //its ALIVEEE!
         //Posso renderizzare l'oggetto.
-        collectables[k].renderSprite(hConsole);
+        collectables[k].object.renderSprite();
     }
 }
 
 /**
     Elimina l'elemento i nel piano di gioco che ha subito una collisione.
 */
-
 //funzione chiamata ogni volta che avviene una collisione
 void LevelManager::CollisionHandler(int i)
 {
     //elimina l'immagine del collider (i quattro punti ai vertici) se in devMode quando avviene una collisione...
-    if (devMode) collectables[i].deleteCollider_render(hConsole);
+    if (devMode) collectables[i].object.deleteCollider_render();
 
-    collectables[i].Collision(hConsole);
+    collectables[i].object.Collision();
 
+    indexQueue.enqueue(i);
     //libera lo spazio in i
-    availableCollectablesIndices[i] = true;
+    collectables[i].available = true;
 
     //update dei dati di gioco
     availableObjects++;
-    onScreenObjects--;
 }
 
 
-
-//////FUNCTIONS FOR LEVEL AESTETIC//////
+///FUNCTIONS FOR LEVEL AESTETIC///
 
 /**
     Posiziona il cursore del renderer nelle coordinate x e y.
@@ -373,8 +326,19 @@ void LevelManager::enviromentAnimationRenderer()
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, 7);
 
-            if (j % 2 == 0) cout << '|';
-            else if (j % 2 != 0) cout << ' ';
+            if (playerCarCol->leftLine < ROAD_CENTER && playerCarCol->rightLine > ROAD_CENTER)
+            {
+                if (((playerCarCol->topLine > j) && (playerCarCol->bottomLine > j))
+                    || ((playerCarCol->topLine < j) && (playerCarCol->bottomLine < j)))
+                {
+                    if (j % 2 == 0) cout << '|';
+                    else if (j % 2 != 0) cout << ' ';
+                }
+            } else
+            {
+                if (j % 2 == 0) cout << '|';
+                else if (j % 2 != 0) cout << ' ';
+            }
 
             gotoPos(RIGHT_SCREEN_BOUNDARY, j);
 
@@ -396,10 +360,21 @@ void LevelManager::enviromentAnimationRenderer()
             cout << ' ';
 
             gotoPos(ROAD_CENTER, j);
-            SetConsoleTextAttribute(hConsole, BACKGROUND_BLACK);
+            SetConsoleTextAttribute(hConsole, 7);
 
-            if (j % 2 != 0) cout << '|';
-            else if (j % 2 == 0) cout << ' ';
+            if (playerCarCol->leftLine < ROAD_CENTER && playerCarCol->rightLine > ROAD_CENTER)
+            {
+                if (((playerCarCol->topLine > j) && (playerCarCol->bottomLine > j))
+                    || ((playerCarCol->topLine < j) && (playerCarCol->bottomLine < j)))
+                {
+                    if (j % 2 != 0) cout << '|';
+                    else if (j % 2 == 0) cout << ' ';
+                }
+            } else
+            {
+                if (j % 2 != 0) cout << '|';
+                else if (j % 2 == 0) cout << ' ';
+            }
 
             gotoPos(RIGHT_SCREEN_BOUNDARY, j);
 
@@ -425,7 +400,7 @@ void LevelManager::drawBackground()
 
             if (j % 2 == 0 && (i == LEFT_SCREEN_BOUNDARY || i == RIGHT_SCREEN_BOUNDARY)) SetConsoleTextAttribute(hConsole, BACKGROUND_WHITE);
             else if (j % 2 != 0 && (i == LEFT_SCREEN_BOUNDARY || i == RIGHT_SCREEN_BOUNDARY)) SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
-            else if (i > LEFT_SCREEN_BOUNDARY && i < RIGHT_SCREEN_BOUNDARY) SetConsoleTextAttribute(hConsole, BACKGROUND_BLACK);
+            else if (i > LEFT_SCREEN_BOUNDARY && i < RIGHT_SCREEN_BOUNDARY) SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
             else SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN);
 
             cout << " ";
@@ -445,27 +420,22 @@ void LevelManager::UIGameInfo()
     window_position.X = UI_POS_X;
     window_position.Y = UI_POS_Y;
 
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
+    SetConsoleCursorPosition(hConsole, window_position);
     SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
 
     cout << "      Game Info";
     window_position.Y++;
     window_position.Y++;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
+    SetConsoleCursorPosition(hConsole, window_position);
     cout << " SPEED: " << setw(6) << (SPEED_LIMIT + 50) - game_speed << " km/h";
     window_position.Y++;
     window_position.Y++;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
+    SetConsoleCursorPosition(hConsole, window_position);
 
     cout << " Level: " << setw(11) << levelCounter;
     window_position.Y++;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), window_position);
+    SetConsoleCursorPosition(hConsole, window_position);
     cout << " Score: " << setw(11) << points;
-
-    /*
-    gotoPos(80,18);
-    cout << "LF:" << levelCounterFloor << " TTW:" << timeToWaitForSpawn  << " sp:" << game_speed << "   ";
-    */
 }
 
 /**
@@ -495,7 +465,7 @@ void LevelManager::UIGameInfoInit()
 /**
     Ritorna il puntatore alle statistiche finali sul livello
 */
-infolist* LevelManager::getStats()
+InfoList* LevelManager::getStats()
 {
     return level_list;
 }
@@ -516,7 +486,7 @@ void LevelManager::addStats()
     level_list->setLevelInfo(levelCounter, points, gas_tanks_counter, puddle_counter);
     gas_tanks_counter = 0;
     puddle_counter = 0;
-    level_list->addElement(new infolist());
+    level_list->addElement(new InfoList());
     level_list = level_list->next;
     list_size++;
 
@@ -527,16 +497,27 @@ void LevelManager::addStats()
     }
 }
 
+/**Getter dello stato del giocatore. Usato per capire quando far comparire il menu di gameover.*/
 bool LevelManager::isPlayerDead()
 {
     return isDead;
 }
 
-//DEBUG FUNCTIONS
-/**
-    Getter della velocit� di gioco. Usato per debugging.
-*/
+///FUNZIONI DI DEBUGGING///
+
+/**Getter della velocit� di gioco. Usato per debugging.*/
 int LevelManager::getGameSpeed()
 {
     return game_speed;
+}
+/**Getter del puntatore alla macchina. Usato per debugging*/
+Car* LevelManager::getPlayerCarPtr()
+{
+    return &playerCar;
+}
+
+/**Getter del puntatore alla coda degli indici. Usato per debugging*/
+IndexQ* LevelManager::getQueuePtr()
+{
+    return &indexQueue;
 }

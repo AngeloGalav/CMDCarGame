@@ -1,12 +1,12 @@
 #include "LevelManager.hpp"
 #include "Menu.hpp"
-
-COORD current_cursor;
+#define _WIN32_WINNT 0x0500
+#include <windows.h>
 
 //TODO: Check if updateCollider() does something or is useless by using devMode
 
 void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu);
-void hidecursor();
+void windowOptions();
 void DebugWindow(HANDLE hConsole, Car* playerObject, LevelManager level);
 
 int main()
@@ -20,7 +20,7 @@ int main()
     LevelManager levelManager(hConsole);
 
     //occulta il cursore
-    hidecursor();
+    windowOptions();
 
 
     Menu mainMenu = Menu();
@@ -69,13 +69,18 @@ void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu)
 }
 
 
-void hidecursor()
+void windowOptions()
 {
-   HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-   CONSOLE_CURSOR_INFO info; //informazioni sul cursore
-   info.dwSize = 100;
-   info.bVisible = FALSE; //attiva solo in debug
-   SetConsoleCursorInfo(consoleHandle, &info);
+    //codice che permette alla finestra di non venire scalata.
+    HWND consoleWindow = GetConsoleWindow();
+    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+
+    //codice che nasconde il cursore
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO info; //informazioni sul cursore
+    info.dwSize = 100;
+    info.bVisible = FALSE; //attiva solo in debug
+    SetConsoleCursorInfo(consoleHandle, &info);
 }
 
 

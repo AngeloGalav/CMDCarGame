@@ -261,7 +261,7 @@ void LevelManager::Spawn()
         collectables[k].object.moveTo(randomValue, 0);
 
         Collider* coll = collectables[k].object.getCollider_ptr();
-        if (coll->leftLine < ROAD_CENTER && ROAD_CENTER < coll->rightLine) collectables[k].object.moveTo(ROAD_CENTER + 1, 0);
+        if (coll->leftLine <= ROAD_CENTER && ROAD_CENTER <= coll->rightLine) collectables[k].object.moveTo(ROAD_CENTER + 1, 0);
 
         availableObjects--; /** check if you still need this HERE**/
 

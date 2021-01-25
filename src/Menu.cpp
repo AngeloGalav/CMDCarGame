@@ -7,8 +7,8 @@ Menu::Menu()
     position.X = 0;
     position.Y = height - 34;
     exit = false;
-    devModeEnabler = true;
-    lightWeightEnabler = true;
+    devModeEnabler = false;
+    lightWeightEnabler = false;
     SetWindow();
 }
 

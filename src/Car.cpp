@@ -44,6 +44,7 @@ void Car::optimized_Movement()
 
 /** Vecchia versione del metodo usato per muovere la macchina.
 *
+*   Lasciato per ragioni di Legacy.
 */
 void Car::Movement()
 {

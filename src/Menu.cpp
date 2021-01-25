@@ -10,7 +10,6 @@ Menu::Menu()
     devModeEnabler = false;
     lightWeightEnabler = false;
     SetWindow();
-
 }
 
 /**

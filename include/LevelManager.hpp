@@ -27,6 +27,7 @@ class LevelManager
         bool frameAnimationEnvBool;
         void drawBackground();
         void gotoPos(int x, int y);
+        bool checkRoadCenter(Collider* elem, int j);
 
         //UI elementi ui
         void UIGameInfo();

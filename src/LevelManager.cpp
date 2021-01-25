@@ -90,8 +90,6 @@ void LevelManager::Update()
 
     UIGameInfo();
 
-    playerCar.renderSprite();
-
     //codice per l'eliminazione dei collider, per togliere il ghosting (questo va solo se siamo in devMode)
     if (devMode)
     {
@@ -125,8 +123,7 @@ void LevelManager::Update()
     {
         if (!collectables[i].available)
         {
-            //manda avanti ogni collectable.
-            collectables[i].object.moveForward();
+            collectables[i].object.Movement();
 
             //visualizza i collider di ciascun elemento.
             if (devMode) collectables[i].object.renderColliders();
@@ -255,7 +252,7 @@ void LevelManager::Spawn()
         collectables[k].available = false;
         if (randomValue == 0) collectables[k].object = gas;
         else if (randomValue == 1) collectables[k].object = puddle;
-        else if (randomValue == 2) collectables[k].object = enemyCar;
+        else if (randomValue == 2) {collectables[k].object = enemyCar; collectables[k].object.randomDir();}
 
         randomValue = rand() % 54 + 11;
         collectables[k].object.moveTo(randomValue, 0);
@@ -327,15 +324,23 @@ void LevelManager::enviromentAnimationRenderer()
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
 
-            if (playerCarCol->leftLine < ROAD_CENTER && playerCarCol->rightLine > ROAD_CENTER)
+
+            bool checked = true;
+
+            for (int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
             {
-                if (((playerCarCol->topLine > j) && (playerCarCol->bottomLine > j))
-                    || ((playerCarCol->topLine < j) && (playerCarCol->bottomLine < j)))
+                if (collectables[i].object.getDir()!= 0)
                 {
-                    if (j % 2 == 0) cout << '|';
-                    else if (j % 2 != 0) cout << ' ';
+                    if (!(checkRoadCenter(collectables[i].object.getCollider_ptr(), j)
+                        || collectables[i].available))
+                    {
+                        checked = false;
+                        i = MAX_ON_SCREEN_OBJECTS;
+                    }
                 }
-            } else
+            }
+
+            if (checked && checkRoadCenter(playerCarCol, j))
             {
                 if (j % 2 == 0) cout << '|';
                 else if (j % 2 != 0) cout << ' ';
@@ -363,15 +368,22 @@ void LevelManager::enviromentAnimationRenderer()
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
 
-            if (playerCarCol->leftLine < ROAD_CENTER && playerCarCol->rightLine > ROAD_CENTER)
+            bool checked = true;
+
+            for (int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
             {
-                if (((playerCarCol->topLine > j) && (playerCarCol->bottomLine > j))
-                    || ((playerCarCol->topLine < j) && (playerCarCol->bottomLine < j)))
+                if (collectables[i].object.getDir()!= 0)
                 {
-                    if (j % 2 != 0) cout << '|';
-                    else if (j % 2 == 0) cout << ' ';
+                    if (!(checkRoadCenter(collectables[i].object.getCollider_ptr(), j)
+                        || collectables[i].available))
+                    {
+                        checked = false;
+                        i = MAX_ON_SCREEN_OBJECTS;
+                    }
                 }
-            } else
+            }
+
+            if (checked && checkRoadCenter(playerCarCol, j))
             {
                 if (j % 2 != 0) cout << '|';
                 else if (j % 2 == 0) cout << ' ';
@@ -387,6 +399,18 @@ void LevelManager::enviromentAnimationRenderer()
     }
 
     frameAnimationEnvBool = !frameAnimationEnvBool;
+}
+
+bool LevelManager::checkRoadCenter(Collider* elem, int j)
+{
+    if (elem->leftLine < ROAD_CENTER && elem->rightLine > ROAD_CENTER)
+    {
+        if (((elem->topLine > j) && (elem->bottomLine > j)) || ((elem->topLine < j) && (elem->bottomLine < j)))
+        { return true;}
+
+        return false;
+
+    } else return true;
 }
 
 /**

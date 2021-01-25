@@ -17,6 +17,7 @@ class Collectable : public ConsoleSprite
         bool stop;  //booleano che stoppa l'oggetto dopo una collisione.
         int effect;
         CollectableType collectable_type;
+        int direction;
 
     public:
         //constructors
@@ -27,6 +28,11 @@ class Collectable : public ConsoleSprite
         CollectableType getTypeOfCollectable();
 
         void moveForward();
+        void Movement();
+        void randomDir();
+        void setDir(int direction);
+        int getDir();
+
         void Collision();
 };
 

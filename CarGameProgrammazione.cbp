@@ -38,6 +38,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add option="-static-libgcc -static-libstdc++ -static -lpthread" />
+		</Linker>
 		<Unit filename="include/Car.hpp" />
 		<Unit filename="include/Collectable.hpp" />
 		<Unit filename="include/ConsoleSprite.hpp" />

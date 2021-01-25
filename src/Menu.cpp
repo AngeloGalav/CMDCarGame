@@ -27,10 +27,11 @@ void Menu::SetWindow()
     Rect.Bottom = height - 1;
     Rect.Right = width - 1;
 
-    hconsole = GetStdHandle(STD_OUTPUT_HANDLE);    //get console handle
-    SetConsoleScreenBufferSize(hconsole, coord);  //set buffer size (to fix the window size)
-    SetConsoleWindowInfo(hconsole, TRUE, &Rect);  //set window size, the second parameter indicates how coordinates should be calculated.
-                                                //(in this case, is from top to bottom (0 from top))
+    hconsole = GetStdHandle(STD_OUTPUT_HANDLE);    //prendi il puntatore al framebuffer
+    SetConsoleScreenBufferSize(hconsole, coord);  //setta le dimensioni del buffer
+    SetConsoleWindowInfo(hconsole, TRUE, &Rect);  //setta le dimensioni della finestra
+                                                    //(il secondo parametro indica come le coordinate dovrebbero essere calcolate,
+                                                //in questo caso, è dall'alto verso il basso (0 è la coordinata più in alto a dx))
 }
 
 /**

@@ -324,8 +324,11 @@ void LevelManager::enviromentAnimationRenderer()
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
 
+            //parte del codice che permette
+            //alle macchine di essere disegnate sopra alla linea di mezzeria.
 
             bool checked = true;
+
 
             for (int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
             {
@@ -368,6 +371,9 @@ void LevelManager::enviromentAnimationRenderer()
             gotoPos(ROAD_CENTER, j);
             SetConsoleTextAttribute(hConsole, BLACK_B_WHITE_F);
 
+            //parte del codice che permette
+            //alle macchine di essere disegnate sopra alla linea di mezzeria.
+
             bool checked = true;
 
             for (int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
@@ -375,7 +381,7 @@ void LevelManager::enviromentAnimationRenderer()
                 if (collectables[i].object.getDir()!= 0)
                 {
                     if (!(checkRoadCenter(collectables[i].object.getCollider_ptr(), j)
-                        || collectables[i].available))
+                        || collectables[i].available))  //se una macchinina si trova sopra la riga, NON PUOI DISEGNARCI SOPRA.
                     {
                         checked = false;
                         i = MAX_ON_SCREEN_OBJECTS;
@@ -383,7 +389,8 @@ void LevelManager::enviromentAnimationRenderer()
                 }
             }
 
-            if (checked && checkRoadCenter(playerCarCol, j))
+            if (checked && checkRoadCenter(playerCarCol, j)) //faccio anche il check con la macchina del giocatore, per vedere se lui è
+                                                            //sulla riga.
             {
                 if (j % 2 != 0) cout << '|';
                 else if (j % 2 == 0) cout << ' ';
@@ -401,6 +408,10 @@ void LevelManager::enviromentAnimationRenderer()
     frameAnimationEnvBool = !frameAnimationEnvBool;
 }
 
+/**
+    Guarda se può disegnare la riga di mezzeria nella riga j in base
+    in base ai collider dell'oggetto che si vuole controllare.
+*/
 bool LevelManager::checkRoadCenter(Collider* elem, int j)
 {
     if (elem->leftLine < ROAD_CENTER && elem->rightLine > ROAD_CENTER)
@@ -452,6 +463,7 @@ void LevelManager::UIGameInfo()
     window_position.Y++;
     window_position.Y++;
     SetConsoleCursorPosition(hConsole, window_position);
+
     cout << " SPEED: " << setw(6) << (SPEED_LIMIT + 50) - game_speed << " km/h";
     window_position.Y++;
     window_position.Y++;
@@ -460,6 +472,9 @@ void LevelManager::UIGameInfo()
     cout << " Level: " << setw(11) << levelCounter;
     window_position.Y++;
     SetConsoleCursorPosition(hConsole, window_position);
+
+    if (points < 0) SetConsoleTextAttribute(hConsole, BLACK_B_RED_F);
+    else SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
     cout << " Score: " << setw(11) << points;
 }
 

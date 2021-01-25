@@ -135,6 +135,7 @@ void LevelManager::Update()
     //visualizzazione dei collider della macchinina.
     if (devMode) playerCar.renderColliders();
 
+
     checkColliders();
 
     //tolgo il ghosting.
@@ -254,13 +255,18 @@ void LevelManager::Spawn()
         else if (randomValue == 1) collectables[k].object = puddle;
         else if (randomValue == 2) {collectables[k].object = enemyCar; collectables[k].object.randomDir();}
 
-        randomValue = rand() % 54 + 11;
+        randomValue = rand() % 54 + (LEFT_SCREEN_BOUNDARY + 1);
         collectables[k].object.moveTo(randomValue, 0);
 
         Collider* coll = collectables[k].object.getCollider_ptr();
         if (coll->leftLine <= ROAD_CENTER && ROAD_CENTER <= coll->rightLine) collectables[k].object.moveTo(ROAD_CENTER + 1, 0);
 
-        availableObjects--; /** check if you still need this HERE**/
+        //fixa un bug che "cancellava" una parte del lato sinistro della strada durante la lightWeightMode.
+        if (collectables[k].object.getTypeOfCollectable() == EnemyCar && randomValue <= LEFT_SCREEN_BOUNDARY + 1
+            && collectables[k].object.getDir() != 0 )
+            {   collectables[k].object.moveTo(LEFT_SCREEN_BOUNDARY + 2, 0);}
+
+        availableObjects--;
 
         //its ALIVEEE!
         //Posso renderizzare l'oggetto.
@@ -326,16 +332,14 @@ void LevelManager::enviromentAnimationRenderer()
 
             //parte del codice che permette
             //alle macchine di essere disegnate sopra alla linea di mezzeria.
-
             bool checked = true;
-
 
             for (int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
             {
                 if (collectables[i].object.getDir()!= 0)
                 {
                     if (!(checkRoadCenter(collectables[i].object.getCollider_ptr(), j)
-                        || collectables[i].available))
+                        || collectables[i].available)) //se una macchinina si trova sopra la riga, NON PUOI DISEGNARCI SOPRA.
                     {
                         checked = false;
                         i = MAX_ON_SCREEN_OBJECTS;
@@ -343,7 +347,8 @@ void LevelManager::enviromentAnimationRenderer()
                 }
             }
 
-            if (checked && checkRoadCenter(playerCarCol, j))
+            if (checked && checkRoadCenter(playerCarCol, j))//faccio anche il check con la macchina del giocatore, per vedere se lui è
+                                                            //sulla riga.
             {
                 if (j % 2 == 0) cout << '|';
                 else if (j % 2 != 0) cout << ' ';
@@ -373,7 +378,6 @@ void LevelManager::enviromentAnimationRenderer()
 
             //parte del codice che permette
             //alle macchine di essere disegnate sopra alla linea di mezzeria.
-
             bool checked = true;
 
             for (int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)

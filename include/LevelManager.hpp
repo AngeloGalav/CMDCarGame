@@ -91,6 +91,8 @@ class LevelManager
         InfoList* getStats();
         int getTotalPoints();
 
+        void displayCarsPositions(COORD* pos);
+
         //funzioni di debugging.
         int getGameSpeed();
         Car* getPlayerCarPtr();

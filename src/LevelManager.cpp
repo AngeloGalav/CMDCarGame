@@ -58,7 +58,7 @@ void LevelManager::Start()
 
     puddle_counter = 0;
     gas_tanks_counter = 0;
-    level_list = new InfoList();
+    level_list = InfoQ();
     totalPoints = 0;
 
     pointsUpperBound = 1000;
@@ -509,9 +509,9 @@ void LevelManager::UIGameInfoInit()
 /**
     Ritorna il puntatore alle statistiche finali sul livello
 */
-InfoList* LevelManager::getStats()
+InfoQ* LevelManager::getStats()
 {
-    return level_list;
+    return &level_list;
 }
 
 /**
@@ -527,17 +527,14 @@ int LevelManager::getTotalPoints()
 */
 void LevelManager::addStats()
 {
-    level_list->setLevelInfo(levelCounter, points, gas_tanks_counter, puddle_counter);
+    level_list.enqueueInfo(levelCounter, points, gas_tanks_counter, puddle_counter);
     gas_tanks_counter = 0;
     puddle_counter = 0;
-    level_list->addElement(new InfoList());
-    level_list = level_list->next;
     list_size++;
 
-    if (list_size > MAX_LIST_SIZE)
+    if (level_list.getSize() >= MAX_LIST_SIZE)
     {
-        level_list->deleteFirst();
-        list_size--;
+        level_list.dequeue();
     }
 }
 

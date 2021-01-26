@@ -1,54 +1,131 @@
 #include "List.hpp"
 
-InfoList::InfoList(){
-    prev = NULL;
-    next = NULL;
-    setLevelInfo(1, 0, 0, 0);
+InfoQ::InfoQ(){
+    coda = NULL;
+    testa = NULL;
+    list_size = 0;
+
+    setLevelInfo(&error_lvl, -1, -1, -1, -1);
 }
 
-InfoList::InfoList(int level_number, int points, int n_gas_tanks, int n_mud)
+InfoQ::InfoQ(int level_number, int points, int n_gas_tanks, int n_mud)
 {
-    prev = NULL;
-    next = NULL;
-    setLevelInfo(level_number, points, n_gas_tanks, n_mud);
+    coda = new info_bilist();
+    testa = coda;
+    setLevelInfo(&(coda->info), level_number, points, n_gas_tanks, n_mud);
+    list_size = 1;
+
+    setLevelInfo(&error_lvl, -1, -1, -1, -1);
 }
 
-
-void InfoList::setLevelInfo(int level_number, int points, int n_gas_tanks, int n_mud)
+void InfoQ::setLevelInfo(level_info* info, int level_number, int points, int n_gas_tanks, int n_mud)
 {
-    level.level_number = level_number;
-    level.points = points;
-    level.mud = n_mud;
-    level.gas_tanks = n_gas_tanks;
+    info->level_number = level_number;
+    info->points = points;
+    info->mud = n_mud;
+    info->gas_tanks = n_gas_tanks;
 }
 
-
-void InfoList::printLevelInfo()
+void InfoQ::printInfo(level_info info)
 {
-    cout << "In level " << level.level_number << ", you've made " << level.points << " pts.";
-    cout << " You've hit " << level.mud << " puddles and " << level.gas_tanks << " gas tanks." ;
+    cout << "In level " << info.level_number;
+    if (info.points >= 0) cout << ", you've made " << info.points << " pts.";
+    else cout << ", you've gone down of a level.";
+
+    cout << " You've hit " << info.mud << " puddles and " << info.gas_tanks << " gas tanks.";
 }
 
-void InfoList::deleteFirst()
+int InfoQ::getSize()
 {
-    InfoList* hd = this;
+    return list_size;
+}
 
-    while (hd->prev != NULL)
+bool InfoQ::isEmpty()
+{
+    return (coda == NULL && testa == NULL);
+}
+
+level_info InfoQ::dequeue()
+{
+    if (testa->next != NULL)
     {
-        hd = hd->prev;
+        info_bilist* tmp = testa;
+        testa = testa->next;
+        testa->prev = NULL;
+
+        level_info toReturn = tmp->info;
+
+        list_size--;
+
+        delete(tmp);
+        return toReturn;
+    }
+    else if (testa != NULL && testa == coda)
+    {
+        level_info toReturn = testa->info;
+        testa = NULL;
+        coda = NULL;
+
+        list_size--;
+
+        return toReturn;
     }
 
-    hd->next->prev = NULL;
-    delete(hd);
+    return error_lvl;
 }
 
-void InfoList::addElement(InfoList* toAdd)
+level_info InfoQ::pop()
 {
-    this->next = toAdd;
-    this->next->prev = this;
+    if (coda->prev != NULL)
+    {
+        info_bilist* tmp = coda;
+        coda = coda->prev;
+        coda->next = NULL;
+
+        level_info toReturn = tmp->info;
+        delete(tmp);
+
+        list_size--;
+
+        return toReturn;
+    }
+    else if (coda != NULL && testa == coda)
+    {
+        level_info toReturn = coda->info;
+        testa = NULL;
+        coda = NULL;
+
+        list_size--;
+
+        return toReturn;
+    }
+    return error_lvl;
 }
 
-//Inizio funzioni di freeIndexQ
+void InfoQ::enqueueInfo(int level_number, int points, int n_gas_tanks, int n_mud)
+{
+    if (coda != NULL)
+    {
+        coda->next = new info_bilist();
+        coda->next->prev = coda;
+        coda = coda->next;
+
+        list_size++;
+        setLevelInfo(&(coda->info), level_number, points, n_gas_tanks, n_mud);
+    } else
+    {
+        coda = new info_bilist();
+        coda->next = NULL;
+        coda->prev = NULL;
+        testa = coda;
+
+        list_size++;
+        setLevelInfo(&(coda->info), level_number, points, n_gas_tanks, n_mud);
+    }
+}
+
+
+//Inizio funzioni di IndexQ
 
 IndexQ::IndexQ()
 {
@@ -58,7 +135,7 @@ IndexQ::IndexQ()
 
 IndexQ::IndexQ(int index)
 {
-    coda = new biList();
+    coda = new index_bilist();
 
     coda->next = NULL;
     coda->prev = NULL;
@@ -70,14 +147,14 @@ void IndexQ::enqueue(int toEnqueue)
 {
     if (coda != NULL)
     {
-        coda->next = new biList();
+        coda->next = new index_bilist();
         coda->next->prev = coda;
         coda = coda->next;
 
         coda->index = toEnqueue;
     } else
     {
-        coda = new biList();
+        coda = new index_bilist();
         coda->next = NULL;
         coda->prev = NULL;
         testa = coda;
@@ -89,7 +166,7 @@ int IndexQ::dequeue()
 {
     if (testa->next != NULL)
     {
-        biList* tmp = testa;
+        index_bilist* tmp = testa;
         testa = testa->next;
         testa->prev = NULL;
 
@@ -109,7 +186,7 @@ int IndexQ::dequeue()
 
 void IndexQ::debugPrint()
 {
-    biList* hd = testa;
+    index_bilist* hd = testa;
 
     while (hd != NULL)
     {

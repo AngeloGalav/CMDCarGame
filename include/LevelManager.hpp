@@ -46,7 +46,7 @@ class LevelManager
 
 
         //Sistema delle statistiche
-        InfoList* level_list;
+        InfoQ level_list;
         unsigned int list_size;
         unsigned int puddle_counter;
         unsigned int gas_tanks_counter;
@@ -88,7 +88,7 @@ class LevelManager
         void Update();
 
         //funzioni usate per passare i dati al menu
-        InfoList* getStats();
+        InfoQ* getStats();
         int getTotalPoints();
 
         void displayCarsPositions(COORD* pos);

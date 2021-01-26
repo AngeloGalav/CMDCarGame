@@ -3,6 +3,7 @@
 #include "Pixel.hpp"
 #include <iomanip>
 
+//struct delle informazioni di livello.
 struct level_info
 {
     int level_number;
@@ -11,42 +12,52 @@ struct level_info
     int gas_tanks;
 };
 
-//Classe lista. Funziona come una queue.
+//bilist delle informazioni di livello.
+struct info_bilist
+{
+    level_info info;
+    info_bilist *next;
+    info_bilist *prev;
+};
 
-class InfoList
+//coda delle informazioni di livello.
+class InfoQ
 {
     private:
-        level_info level;
+        info_bilist* coda;
+        info_bilist* testa;
+        void setLevelInfo(level_info* info, int level_number, int points, int n_gas_tanks, int n_mud);
+        level_info error_lvl; // se la funzione ritorna questo, vuol dire che c'e' stato un errore.
+        int list_size;
 
     public:
-        InfoList *prev;
-        InfoList *next;
+        InfoQ();
+        InfoQ(int level_number, int points, int n_gas_tanks, int n_mud);
 
-        InfoList();
-        InfoList(int level_number, int points, int n_gas_tanks, int n_mud);
+        int getSize();
+        bool isEmpty();
 
-        void setLevelInfo(int level_number, int points, int n_gas_tanks, int n_mud);
-        void printLevelInfo();
+        void printInfo(level_info info);
+        void enqueueInfo(int level_number, int points, int n_gas_tanks, int n_mud);
 
-        void deleteFirst();
-        void deleteLast();
-        void addElement(InfoList* toAdd);
+        level_info dequeue();
+        level_info pop();
 };
 
-
-struct biList
+//lista degli indici (usata per indicare gli indici liberi in levelManager).
+struct index_bilist
 {
     unsigned int index;
-    biList *next;
-    biList *prev;
+    index_bilist *next;
+    index_bilist *prev;
 };
 
-//lista degli indici liberi in levelManager.
+
 class IndexQ
 {
     protected:
-        biList* coda;
-        biList* testa;
+        index_bilist* coda;
+        index_bilist* testa;
 
     public:
         IndexQ();

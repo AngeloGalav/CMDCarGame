@@ -357,9 +357,9 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
 /**
     Prende la lista delle statistische da mostrare dal levelmanager.
 */
-void Menu::saveStats(InfoList* to_retrieve)
+void Menu::saveStats(InfoQ* to_retrieve)
 {
-    stats_from_level = to_retrieve->prev;
+    stats_from_level = to_retrieve;
 }
 
 /**
@@ -397,7 +397,7 @@ void Menu::printStats()
     SetConsoleCursorPosition(hconsole,position);
     SetConsoleTextAttribute(hconsole, BLACK_B_GREEN_F);
 
-    if (stats_from_level != NULL)
+    if ( !(stats_from_level->isEmpty()) )
     {
         printStatsRec(0);
     } else cout << "No statistics to display :-(";
@@ -405,13 +405,15 @@ void Menu::printStats()
 
 void Menu::printStatsRec(int nline)
 {
-    if (stats_from_level != NULL && nline < 10)
+    if ( !(stats_from_level->isEmpty()) && nline < 10)
     {
         cout << "- ";
-        stats_from_level->printLevelInfo();
+
+        level_info toPrint = stats_from_level->pop();
+        stats_from_level->printInfo(toPrint);
+
         position.Y++;
         SetConsoleCursorPosition(hconsole,position);
-        stats_from_level = stats_from_level->prev;
         nline++;
         printStatsRec(nline);
     }

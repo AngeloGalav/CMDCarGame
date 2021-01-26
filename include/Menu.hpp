@@ -18,7 +18,7 @@ class Menu
         void printStatsRec(int nline);
         void displayPoints();
 
-        InfoList* stats_from_level;
+        InfoQ* stats_from_level;
         int points_from_level;
         bool exit;
 
@@ -37,7 +37,7 @@ class Menu
         void MainMenu();
         void GameOverMenu();
 
-        void saveStats(InfoList* to_retrieve);
+        void saveStats(InfoQ* to_retrieve);
         void saveScore(int points);
 };
 

@@ -5,14 +5,13 @@
 #include "list.hpp"
 #include <iomanip>
 #include <string>
-#include <time.h>
+
 
 struct CollectableMemory    //è true se dentro il posto è libero, false altrimenti.
 {
     bool available;
     Collectable object;
 };
-
 
 class LevelManager
 {
@@ -21,6 +20,9 @@ class LevelManager
         int timeToWaitForSpawn;
         int time;   //numero di iterazioni svolte ad ogni spawn.
         int availableObjects; //numero di oggetti che possiamo spawnare
+        clock_t deltaTime;
+        int fpsCount;
+        double fps;
 
         //Funzioni di estetica
         void enviromentAnimationRenderer();

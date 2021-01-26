@@ -20,6 +20,10 @@ LevelManager::LevelManager(HANDLE thConsole)
     enemyCar = Collectable(filePath[3], -1000, EnemyCar, hConsole);
 }
 
+double clockToMilliseconds(clock_t ticks){
+    // units/(units/time) => time (seconds) * 1000 = milliseconds
+    return (ticks/(double)CLOCKS_PER_SEC)*1000.0;
+}
 /**
     Metodo che viene chiamato all'inizio del gioco.
 */
@@ -79,6 +83,11 @@ void LevelManager::Start()
 
     UIGameInfoInit();
     playerCar.renderSprite();
+
+    fpsCount = 0;
+    deltaTime = 0;
+    fps = 0;
+   // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl
 }
 
 /**
@@ -86,6 +95,7 @@ void LevelManager::Start()
 */
 void LevelManager::Update()
 {
+    clock_t beginFrame = clock();
     Sleep(game_speed);
 
     UIGameInfo();
@@ -140,6 +150,18 @@ void LevelManager::Update()
 
     //tolgo il ghosting.
     playerCar.renderSprite(); //TODO: DELETE GHOSTING
+
+    clock_t endFrame = clock();
+
+    deltaTime += endFrame - beginFrame;
+    fpsCount++;
+
+    if (clockToMilliseconds(deltaTime) > 1000.0){
+        fps = (((double) fpsCount)/deltaTime) * 10000.0;
+        deltaTime = 0;
+        fpsCount = 0;
+    }
+
 }
 
 /**
@@ -464,22 +486,26 @@ void LevelManager::UIGameInfo()
     SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
 
     cout << "      Game Info";
-    window_position.Y++;
-    window_position.Y++;
+    window_position.Y += 2;
     SetConsoleCursorPosition(hConsole, window_position);
 
     cout << " SPEED: " << setw(6) << (SPEED_LIMIT + 50) - game_speed << " km/h";
-    window_position.Y++;
-    window_position.Y++;
+    window_position.Y += 2;
     SetConsoleCursorPosition(hConsole, window_position);
+
+    if (points < 0) SetConsoleTextAttribute(hConsole, BLACK_B_RED_F);
+    else SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
 
     cout << " Level: " << setw(11) << levelCounter;
     window_position.Y++;
     SetConsoleCursorPosition(hConsole, window_position);
 
-    if (points < 0) SetConsoleTextAttribute(hConsole, BLACK_B_RED_F);
-    else SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
     cout << " Score: " << setw(11) << points;
+    window_position.Y++;
+    SetConsoleCursorPosition(hConsole, window_position);
+
+    SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
+    cout << " FPS: " << setw(13) << ((int)fps )/ 10.0;
 }
 
 /**

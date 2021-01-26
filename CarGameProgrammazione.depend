@@ -395,15 +395,14 @@
 	"Menu.hpp"
 	<windows.h>
 
-1611675084 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\levelmanager.hpp
+1611698194 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\levelmanager.hpp
 	"Car.hpp"
 	"Collectable.hpp"
 	"list.hpp"
 	<iomanip>
 	<string>
-	<time.h>
 
-1611675932 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\levelmanager.cpp
+1611698919 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\levelmanager.cpp
 	"LevelManager.hpp"
 
 1611588800 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\definitions.hpp

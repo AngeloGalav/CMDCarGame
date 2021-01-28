@@ -357,7 +357,7 @@ void Menu::printTextFile(char* directory, bool centered, int x, int y)
 /**
     Prende la lista delle statistische da mostrare dal levelmanager.
 */
-void Menu::saveStats(InfoQ* to_retrieve)
+void Menu::saveStats(Queue<level_info>* to_retrieve)
 {
     stats_from_level = to_retrieve;
 }

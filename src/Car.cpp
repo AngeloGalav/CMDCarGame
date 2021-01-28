@@ -42,24 +42,6 @@ void Car::optimized_Movement()
     }
 }
 
-/** Vecchia versione del metodo usato per muovere la macchina.
-*
-*   Lasciato per ragioni di Legacy.
-*/
-void Car::Movement()
-{
-    deleteSprite();
-
-    if (GetAsyncKeyState(VK_UP) && rect_collider.topLine > up_wall) translate(0,-1);
-    else if (GetAsyncKeyState(VK_LEFT) && rect_collider.leftLine > left_wall ) translate(-1,0);
-    else if (GetAsyncKeyState(VK_RIGHT) && rect_collider.rightLine < right_wall ) translate(1,0);
-    else if (GetAsyncKeyState(VK_DOWN) && rect_collider.bottomLine < down_wall) translate(0,1);
-
-    renderSprite();
-}
-
-
-
 /**
 *   Setta i limiti di movimento della macchina nel livello.
 *

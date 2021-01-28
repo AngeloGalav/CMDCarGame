@@ -1,5 +1,6 @@
 #ifndef LEVELMANAGER_HPP
 #define LEVELMANAGER_HPP
+
 #include "Car.hpp"
 #include "Collectable.hpp"
 #include "list.hpp"
@@ -48,7 +49,7 @@ class LevelManager
 
 
         //Sistema delle statistiche
-        InfoQ level_list;
+        Queue<level_info> level_list;
         unsigned int list_size;
         unsigned int puddle_counter;
         unsigned int gas_tanks_counter;
@@ -71,8 +72,11 @@ class LevelManager
 
         Collider* playerCarCol;//usato per sistemare il bug con linea di mezzeria
 
-        IndexQ indexQueue;
+        Queue<int> indexQueue;
         bool isDead;
+
+        //debug window
+        void DebugWindow();
 
     public:
         LevelManager(HANDLE thConsole);
@@ -90,14 +94,9 @@ class LevelManager
         void Update();
 
         //funzioni usate per passare i dati al menu
-        InfoQ* getStats();
+        Queue<level_info>* getStats();
         int getTotalPoints();
 
         void displayCarsPositions(COORD* pos);
-
-        //funzioni di debugging.
-        int getGameSpeed();
-        Car* getPlayerCarPtr();
-        IndexQ* getQueuePtr();
 };
 #endif // LEVELMANAGER_HPP

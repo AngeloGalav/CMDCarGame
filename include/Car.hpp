@@ -17,7 +17,6 @@ class Car : public ConsoleSprite
         Car(char* directory, int x, int y, HANDLE thConsole);
 
         //funzioni per il movimento della macchina via tastiera.
-        void Movement();
         void optimized_Movement();
 
         //setta i limiti di movimento della macchina

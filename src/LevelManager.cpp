@@ -62,7 +62,7 @@ void LevelManager::Start()
 
     puddle_counter = 0;
     gas_tanks_counter = 0;
-    level_list = InfoQ();
+    level_list = Queue<level_info>();
     totalPoints = 0;
 
     pointsUpperBound = 1000;
@@ -70,7 +70,7 @@ void LevelManager::Start()
     playerCar.setBoundaries(LEFT_SCREEN_BOUNDARY + 1, RIGHT_SCREEN_BOUNDARY - 1,
                             UPPER_SCREEN_BOUNDARY + 1, LOWER_SCREEN_BOUNDARY - 1);
 
-    indexQueue = IndexQ();
+    indexQueue = Queue<int>();
 
     for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
@@ -95,7 +95,7 @@ void LevelManager::Start()
 */
 void LevelManager::Update()
 {
-    clock_t beginFrame = clock();
+    clock_t beginFrame = clock(); //misuro il tempo di un frame per il calcolo degli fps
     Sleep(game_speed);
 
     UIGameInfo();
@@ -156,12 +156,13 @@ void LevelManager::Update()
     deltaTime += endFrame - beginFrame;
     fpsCount++;
 
-    if (clockToMilliseconds(deltaTime) > 1000.0){
+    if (clockToMilliseconds(deltaTime) > 1000.0){   //calcolo fps
         fps = (((double) fpsCount)/deltaTime) * 10000.0;
         deltaTime = 0;
         fpsCount = 0;
     }
 
+    if (devMode) DebugWindow();
 }
 
 /**
@@ -524,8 +525,6 @@ void LevelManager::UIGameInfoInit()
             cout << " ";
         }
     }
-
-    //85
     SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
     gotoPos(UI_POS_X + 5, j - 2);
     cout << "Good Luck!";
@@ -535,7 +534,7 @@ void LevelManager::UIGameInfoInit()
 /**
     Ritorna il puntatore alle statistiche finali sul livello
 */
-InfoQ* LevelManager::getStats()
+Queue<level_info>* LevelManager::getStats()
 {
     return &level_list;
 }
@@ -553,7 +552,9 @@ int LevelManager::getTotalPoints()
 */
 void LevelManager::addStats()
 {
-    level_list.enqueueInfo(levelCounter, points, gas_tanks_counter, puddle_counter);
+    level_info toAdd;
+    setLevelInfo(&toAdd, levelCounter, points, gas_tanks_counter, puddle_counter);
+    level_list.enqueue(toAdd);
     gas_tanks_counter = 0;
     puddle_counter = 0;
     list_size++;
@@ -572,19 +573,45 @@ bool LevelManager::isPlayerDead()
 
 ///FUNZIONI DI DEBUGGING///
 
-/**Getter della velocit� di gioco. Usato per debugging.*/
-int LevelManager::getGameSpeed()
-{
-    return game_speed;
-}
-/**Getter del puntatore alla macchina. Usato per debugging*/
-Car* LevelManager::getPlayerCarPtr()
-{
-    return &playerCar;
-}
 
-/**Getter del puntatore alla coda degli indici. Usato per debugging*/
-IndexQ* LevelManager::getQueuePtr()
+/**
+    Mostra le informazioni di debugging su schermo durante la devMode.
+*/
+void LevelManager::DebugWindow()
 {
-    return &indexQueue;
+    Car* playerObject = &playerCar;
+    Queue<int>* debugger = &indexQueue;
+
+    COORD window_position;
+    window_position.X = UI_POS_X;
+    window_position.Y = UI_POS_Y + UI_HEIGHT - 3;
+    SetConsoleCursorPosition(hConsole, window_position);
+    SetConsoleTextAttribute(hConsole, 14);
+
+    window_position.Y++;
+    SetConsoleCursorPosition(hConsole, window_position);
+
+    cout << "player_position: ";
+    playerObject->printSpritePosition();
+
+
+    window_position.Y++;
+    SetConsoleCursorPosition(hConsole, window_position);
+
+    Collider* Collider_ptr;
+    Collider_ptr = playerObject->getCollider_ptr();
+
+    cout << "player_col:(" << Collider_ptr->topLine << ", " << Collider_ptr->leftLine  << ")" << ", (" << Collider_ptr->bottomLine << ", "
+    << Collider_ptr->rightLine << ")";
+
+    window_position.Y++;
+    SetConsoleCursorPosition(hConsole, window_position);
+    debugger->debugPrint();
+
+    window_position.Y++;
+    SetConsoleCursorPosition(hConsole, window_position);
+
+    //mostra info di ciascun pixel della macchina
+
+    playerObject->printSinglePixelInfo(&window_position);
 }

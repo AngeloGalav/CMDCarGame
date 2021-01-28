@@ -27,7 +27,6 @@ class Collectable : public ConsoleSprite
         int getEffect();
         CollectableType getTypeOfCollectable();
 
-        void moveForward();
         void Movement();
         void randomDir();
         void setDir(int direction);

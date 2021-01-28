@@ -26,21 +26,6 @@ int Collectable::getEffect()
     return effect;
 }
 
-/**
-    Muove in avanti l'oggetto, finché non incontra
-    il fondo dello schermo.
-
-    Lasciato per ragioni di Legacy.
-*/
-void Collectable::moveForward()
-{
-    if (rect_collider.bottomLine <= LOWER_SCREEN_BOUNDARY && !stop)
-    {
-        deleteSprite();
-        translate(0, 1);
-        renderSprite();
-    }
-}
 
 /**
     Muove in avanti l'oggetto in zigzag, cambiando direzione

@@ -12,13 +12,10 @@ int main()
 
     //console handle
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
     //creazione classe levelmanager
     LevelManager levelManager(hConsole);
-
     //occulta il cursore
     windowOptions();
-
 
     Menu mainMenu = Menu();
     mainMenu.MainMenu();
@@ -43,7 +40,7 @@ void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu)
     {
         level_manager.Update();
 
-        if (level_manager.isPlayerDead() || GetAsyncKeyState(VK_ESCAPE) !=0)
+        if (level_manager.isPlayerDead() || GetAsyncKeyState(VK_ESCAPE) != 0)
         {
             mainMenu.saveStats(level_manager.getStats());
             mainMenu.saveScore(level_manager.getTotalPoints());
@@ -55,7 +52,16 @@ void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu)
                 stop = true;
             } else
             {
-                level_manager.Start();
+                system("cls");
+                mainMenu.MainMenu();
+
+                if (!mainMenu.exitMenu())
+                {
+                    level_manager.devMode = mainMenu.devModeEnabler;
+                    level_manager.lightWeightMode = mainMenu.lightWeightEnabler;
+                    level_manager.Start();
+                }
+                else stop = true;
             }
         }
     }

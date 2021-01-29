@@ -431,7 +431,6 @@ void LevelManager::enviromentAnimationRenderer()
             cout << ' ';
         }
     }
-
     frameAnimationEnvBool = !frameAnimationEnvBool;
 }
 

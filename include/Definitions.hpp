@@ -1,6 +1,6 @@
 //general costants
 #define MAX_PIXEL_SIZE 32
-#define MAX_LIST_SIZE 12 //change to 12
+#define MAX_LIST_SIZE 12
 #define LOWER_SCREEN_BOUNDARY 43
 #define UPPER_SCREEN_BOUNDARY 0
 #define LEFT_SCREEN_BOUNDARY 10

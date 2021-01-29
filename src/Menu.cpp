@@ -31,7 +31,7 @@ void Menu::SetWindow()
     SetConsoleScreenBufferSize(hconsole, coord);  //setta le dimensioni del buffer
     SetConsoleWindowInfo(hconsole, TRUE, &Rect);  //setta le dimensioni della finestra
                                                     //(il secondo parametro indica come le coordinate dovrebbero essere calcolate,
-                                                //in questo caso, è dall'alto verso il basso (0 è la coordinata più in alto a dx))
+                                                    //in questo caso, è dall'alto verso il basso (0 è la coordinata più in alto a dx))
 }
 
 /**
@@ -90,7 +90,7 @@ void Menu::GameOverMenu()
     position.Y += 4;
     CursorMenuStartPosition = position.Y;
     SetConsoleCursorPosition(hconsole,position);
-    cout << "# Restart";
+    cout << "# Main Menu";
 
     position.Y++;
     SetConsoleCursorPosition(hconsole,position);
@@ -190,11 +190,11 @@ void Menu::MainMenu()
     position.Y++;
     SetConsoleCursorPosition(hconsole,position);
 
-    if (lightWeightEnabler){
-        cout << "# Enable RTX                  ";
+    if (!lightWeightEnabler){
+        cout << "# Enable ASCIIMode               ";
     } else
     {
-        cout << "# Disable RTX                 ";
+        cout << "# Disable ASCIIMode              ";
     }
 
     position.Y++;

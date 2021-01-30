@@ -87,7 +87,6 @@ void LevelManager::Start()
     fpsCount = 0;
     deltaTime = 0;
     fps = 0;
-   // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl
 }
 
 /**
@@ -140,8 +139,6 @@ void LevelManager::Update()
         }
     }
 
-    //playerCar.Movement(hConsole);
-
     //visualizzazione dei collider della macchinina.
     if (devMode) playerCar.renderColliders();
 
@@ -188,8 +185,8 @@ void LevelManager::playerGameMechanics()
 
         if (timeToWaitForSpawn > MAX_TIME_TO_WAIT_SPAWN) timeToWaitForSpawn--; //il tempo di spawning diminuisce.. (aumento difficoltà)
 
-        if (game_speed - 20 > 0 && !devMode) game_speed -= 20;
-        else  game_speed = 1;
+        if (game_speed - 20 > 0 && !devMode) game_speed -= 20;  //se in devMode, non ti diminuisce la velocità quando scendi di livello.
+        else if (game_speed - 20 < 0 && !devMode) game_speed = 1;
 
         //punto in cui la difficolt� finisce di aumentare, e quindi aumento il levelCounter floor.
         if (timeToWaitForSpawn == MAX_TIME_TO_WAIT_SPAWN && game_speed == prev_game_speed) levelCounterFloor++;
@@ -202,7 +199,7 @@ void LevelManager::playerGameMechanics()
         points =  pointsUpperBound + points;
 
         if (levelCounter >= 2) levelCounter--;
-        else if (!devMode) isDead = true; //se il tuo livello è minore di 1, allora sei morto.
+        else if (!devMode) isDead = true; //se il tuo livello è minore di 1, allora sei morto. (MA NON SE USI LA DEVMODE)
 
         //se la condizione � vera, abbiamo raggiunto la difficolt� massima
         if (levelCounterFloor >= 1) levelCounterFloor--;
@@ -221,7 +218,7 @@ void LevelManager::playerGameMechanics()
 */
 void LevelManager::manualAccelerator()
 {
-    if (GetAsyncKeyState(KEY_E) && game_speed < SPEED_LIMIT && devMode) game_speed++; //81 e 69 sono i keycode di E e Q rispettivamente.
+    if (GetAsyncKeyState(KEY_E) && game_speed < SPEED_LIMIT && devMode) game_speed++;
     else if (GetAsyncKeyState(KEY_Q) && game_speed > 1 && devMode) game_speed--;
 }
 
@@ -267,7 +264,8 @@ void LevelManager::checkColliders()
 
 void LevelManager::Spawn()
 {
-    int k = indexQueue.dequeue(); //prendi il primo indice della queue
+    int k = -1;
+    if (!indexQueue.isEmpty()) k = indexQueue.dequeue(); //prendi il primo indice della queue
     int randomValue = rand() % 3;
 
     //se dopo tutti questi passaggi, k � != -1 (quindi si � trovato un posto libero) finalizza lo spawn

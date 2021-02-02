@@ -53,6 +53,9 @@ void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu)
             } else
             {
                 system("cls");
+
+                level_manager.listCleanup(); //pulizia delle liste
+
                 mainMenu.MainMenu();
 
                 if (!mainMenu.exitMenu())

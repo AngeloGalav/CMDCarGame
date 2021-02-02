@@ -84,19 +84,23 @@ T Queue<T>::dequeue()
 {
     if (testa->next != NULL)
     {
-        QElem<T>* tmp = testa;
+        T toReturn = testa->elem;
         testa = testa->next;
+
+        delete(testa->prev);
         testa->prev = NULL;
+
         list_size--;
-        T toReturn = tmp->elem;
-        delete(tmp);
         return toReturn;
     }
     else if (testa != NULL && testa == coda)
     {
         T toReturn = coda->elem;
-        testa = NULL;
+
+        delete(coda);
         coda = NULL;
+        testa = NULL;
+
         list_size--;
         return toReturn;
     }
@@ -112,12 +116,11 @@ T Queue<T>::pop()
 {
     if (coda->prev != NULL)
     {
-        QElem<T>* tmp = coda;
+        T toReturn = coda->elem;
         coda = coda->prev;
-        coda->next = NULL;
 
-        T toReturn = tmp->elem;
-        delete(tmp);
+        delete(coda->next);
+        coda->next = NULL;
 
         list_size--;
 
@@ -126,8 +129,10 @@ T Queue<T>::pop()
     else if (coda != NULL && testa == coda)
     {
         T toReturn = coda->elem;
-        testa = NULL;
+
+        delete(coda);
         coda = NULL;
+        testa = NULL;
 
         list_size--;
 

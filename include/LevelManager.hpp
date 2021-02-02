@@ -98,5 +98,6 @@ class LevelManager
         int getTotalPoints();
 
         void displayCarsPositions(COORD* pos);
+        void listCleanup();
 };
 #endif // LEVELMANAGER_HPP

@@ -142,7 +142,6 @@ void LevelManager::Update()
     //visualizzazione dei collider della macchinina.
     if (devMode) playerCar.renderColliders();
 
-
     checkColliders();
 
     //tolgo il ghosting.
@@ -566,6 +565,16 @@ void LevelManager::addStats()
 bool LevelManager::isPlayerDead()
 {
     return isDead;
+
+}
+
+/**
+    Pulisce le liste evitando memory leaks quando si ricomincia...
+*/
+void LevelManager::listCleanup()
+{
+    while (!indexQueue.isEmpty()) indexQueue.dequeue();
+    while (!level_list.isEmpty()) level_list.dequeue();
 }
 
 ///FUNZIONI DI DEBUGGING///

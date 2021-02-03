@@ -34,7 +34,7 @@ int Collectable::getEffect()
 
     Il modo in cui si muove dipende dal valore di direction.
 
-    E' molto diverto dal metodo Movement della classe Car.
+    E' molto diverso dal metodo Movement della classe Car.
 */
 void Collectable::Movement()
 {

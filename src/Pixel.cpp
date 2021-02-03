@@ -39,8 +39,7 @@ void Pixel::RenderPixel(HANDLE hConsole)
 void Pixel::BlankPixel(HANDLE hConsole, COORD previousCursor)
 {
     SetConsoleCursorPosition(hConsole, previousCursor);
-    //set color to black (since the street is black)
-    SetConsoleTextAttribute(hConsole, 0x00);
+    SetConsoleTextAttribute(hConsole, BLACK_B_BLACK_F);
     cout << ' ';
 }
 

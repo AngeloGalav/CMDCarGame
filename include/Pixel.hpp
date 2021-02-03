@@ -8,10 +8,6 @@
 
 using namespace std;
 
-/**
-    TODO: GET-SET CHAR PIXCHAR
-*/
-
 class Pixel
 {
     protected:
@@ -30,18 +26,6 @@ class Pixel
         //rendering functions
         void RenderPixel(HANDLE hConsole);
         void BlankPixel(HANDLE hConsole, COORD previousCursor);
-
-        /*
-        //setter and getter
-        void setX(SHORT x);
-        void setY(SHORT y);
-
-        SHORT getPosition();
-        void setPosition(COORD pos);
-
-        void setColor();
-        void setPixChar(WORD _color);
-        */
 
         //debug functions
         void printPixelInfo();

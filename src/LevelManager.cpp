@@ -1,7 +1,5 @@
 #include "LevelManager.hpp"
 
-//toDO: hConsole trimming.
-
 LevelManager::LevelManager(HANDLE thConsole)
 {
     hConsole = thConsole;
@@ -145,7 +143,7 @@ void LevelManager::Update()
     checkColliders();
 
     //tolgo il ghosting.
-    playerCar.renderSprite(); //TODO: DELETE GHOSTING
+    playerCar.renderSprite();
 
     clock_t endFrame = clock();
 
@@ -185,7 +183,7 @@ void LevelManager::playerGameMechanics()
         if (timeToWaitForSpawn > MAX_TIME_TO_WAIT_SPAWN) timeToWaitForSpawn--; //il tempo di spawning diminuisce.. (aumento difficoltà)
 
         if (game_speed - 20 > 0 && !devMode) game_speed -= 20;  //se in devMode, non ti diminuisce la velocità quando scendi di livello.
-        else if (game_speed - 20 < 0 && !devMode) game_speed = 1;
+        else if (game_speed - 20 <= 0 && !devMode) game_speed = 1;
 
         //punto in cui la difficolt� finisce di aumentare, e quindi aumento il levelCounter floor.
         if (timeToWaitForSpawn == MAX_TIME_TO_WAIT_SPAWN && game_speed == prev_game_speed) levelCounterFloor++;

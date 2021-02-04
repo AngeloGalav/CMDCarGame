@@ -1,4 +1,4 @@
-#include "ConsoleSprite.hpp"
+#include "..\include\ConsoleSprite.hpp"
 
 ConsoleSprite::ConsoleSprite()
 {

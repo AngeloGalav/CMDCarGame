@@ -1,4 +1,4 @@
-#include "Car.hpp"
+#include "..\include\Car.hpp"
 
 /** Nei due costruttori qua sotto si crea lo sprite della macchina e
 *   si aggiornano i collider.

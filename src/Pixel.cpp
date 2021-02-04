@@ -1,4 +1,4 @@
-#include "Pixel.hpp"
+#include "..\include\Pixel.hpp"
 
 Pixel::Pixel()
 {
@@ -15,7 +15,6 @@ Pixel::Pixel(char pix)
     pixChar = pix;
     color = BLACK_B_BLACK_F;
 }
-
 
 
 /**

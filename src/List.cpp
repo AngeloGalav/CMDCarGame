@@ -1,4 +1,4 @@
-#include "List.hpp"
+#include "..\include\List.hpp"
 
 /**
     Da un valore allo struct contenente le info di livello.
@@ -105,7 +105,7 @@ T Queue<T>::dequeue()
         return toReturn;
     }
 
-    throw std::logic_error( "coda vuota..." );  //Usato per evitare i warning...
+    return {};  //Usato per evitare i warning...
 }
 
 /**
@@ -139,7 +139,7 @@ T Queue<T>::pop()
         return toReturn;
     }
 
-    throw std::logic_error( "coda vuota..." );  //Usato per evitare i warning...
+    return {};  //Usato per evitare i warning...
 }
 
 

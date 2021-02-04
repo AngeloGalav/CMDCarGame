@@ -1,5 +1,5 @@
-#include "LevelManager.hpp"
-#include "Menu.hpp"
+#include "include\LevelManager.hpp"
+#include "include\Menu.hpp"
 #include <windows.h>
 
 void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu);

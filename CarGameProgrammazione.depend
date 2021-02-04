@@ -321,9 +321,10 @@
 	"ConsoleSprite.hpp"
 	"Car.hpp"
 
-1610885768 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\main.cpp
-	"LevelManager.hpp"
-	"Menu.hpp"
+1612476643 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\main.cpp
+	"include\LevelManager.hpp"
+	"include\Menu.hpp"
+	<windows.h>
 
 1606847782 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\menu.hpp
 	"ConsoleSprite.hpp"
@@ -344,8 +345,8 @@
 1610888714 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\car.cpp
 	"Car.hpp"
 
-1611839270 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\car.cpp
-	"Car.hpp"
+1612476815 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\car.cpp
+	"..\include\Car.hpp"
 
 1611839281 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\car.hpp
 	"ConsoleSprite.hpp"
@@ -361,18 +362,18 @@
 	<windows.h>
 	<iostream>
 
-1612312422 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\collectable.cpp
-	"Collectable.hpp"
+1612476739 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\collectable.cpp
+	"..\include\Collectable.hpp"
 
 1611839350 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\collectable.hpp
 	"ConsoleSprite.hpp"
 	"Car.hpp"
 
-1611524990 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\consolesprite.cpp
-	"ConsoleSprite.hpp"
+1612476749 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\consolesprite.cpp
+	"..\include\ConsoleSprite.hpp"
 
-1612286738 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\menu.cpp
-	"Menu.hpp"
+1612476759 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\menu.cpp
+	"..\include\Menu.hpp"
 
 1611957642 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\menu.hpp
 	<string>
@@ -380,11 +381,11 @@
 	"List.hpp"
 	"Definitions.hpp"
 
-1612312475 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\pixel.cpp
-	"Pixel.hpp"
+1612476729 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\pixel.cpp
+	"..\include\Pixel.hpp"
 
-1612284829 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\list.cpp
-	"List.hpp"
+1612477167 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\list.cpp
+	"..\include\List.hpp"
 
 1611956765 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\list.hpp
 	"Pixel.hpp"
@@ -402,8 +403,8 @@
 	<iomanip>
 	<string>
 
-1612312972 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\levelmanager.cpp
-	"LevelManager.hpp"
+1612476958 source:c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\src\levelmanager.cpp
+	"..\include\LevelManager.hpp"
 
 1612312662 c:\users\asus\documents\school\corso informatica\cargame git\cmdcargame\include\definitions.hpp
 

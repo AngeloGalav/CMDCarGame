@@ -1,4 +1,4 @@
-#include "Collectable.hpp"
+#include "..\include\Collectable.hpp"
 
 Collectable::Collectable() : ConsoleSprite()
 {

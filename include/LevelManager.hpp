@@ -3,13 +3,13 @@
 
 #include "Car.hpp"
 #include "Collectable.hpp"
-#include "list.hpp"
-#include <iomanip>
+#include "List.hpp"
+#include <iomanip>  //usato per formattare il testo nella UI
 #include <string>
 
 
 struct CollectableMemory    //è true se dentro il posto è libero, false altrimenti.
-{
+{                           //questa struttura rappresenta la "cache" degli oggetti sullo schermo.
     bool available;
     Collectable object;
 };
@@ -21,9 +21,6 @@ class LevelManager
         int timeToWaitForSpawn;
         int time;   //numero di iterazioni svolte ad ogni spawn.
         int availableObjects; //numero di oggetti che possiamo spawnare
-        clock_t deltaTime;
-        int fpsCount;
-        double fps;
 
         //Funzioni di estetica
         void enviromentAnimationRenderer();

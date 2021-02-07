@@ -34,7 +34,7 @@ void Car::optimized_Movement()
     else if (GetAsyncKeyState(VK_DOWN) && rect_collider.bottomLine < down_wall) {x = 0; y = 1;}
     else hasMoved = false;
 
-    if (hasMoved)
+    if (hasMoved)   //renderizzo la macchina ed elimino il vecchio sprite SOLO se si è mossa
     {
         deleteSprite();
         translate(x, y);

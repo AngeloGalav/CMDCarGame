@@ -211,7 +211,7 @@ void ConsoleSprite::translate(int x, int y)
     rect_collider.leftLine += x;
     rect_collider.rightLine += x;
 
-    int i=0;
+    int i = 0;
     while (pixelCount > i)
     {
         pixels[i].position.X += x;
@@ -271,7 +271,7 @@ void ConsoleSprite::calculate_RightLeftLine()
     int mn = 0;
     for (int i = 0; i < pixelCount; i++)
     {
-        //finds the farthest pixel on the right and on the left, so that even unusual shapes are supported.
+        //trova il pixel più a destra (e più a sinistra) dell'oggetto in modo da generare i colliders
         if (pixels[mx].position.X < pixels[i].position.X) mx = i;
         if (pixels[mn].position.X > pixels[i].position.X) mn = i;
     }
@@ -379,7 +379,7 @@ void ConsoleSprite::printSinglePixelInfo(COORD* windowCursor)
     int i = 0;
     while (pixelCount > i){
         SetConsoleCursorPosition(hConsole, *windowCursor);
-        cout << "pixelNumber " << i+1 << ':';
+        cout << "pixelNumber " << i + 1 << ':';
         pixels[i].printPixelInfo();
         i++;
         windowCursor->Y++;

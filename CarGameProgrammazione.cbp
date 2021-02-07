@@ -29,8 +29,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-static" />
 					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-static-libgcc -static-libstdc++ -static -lpthread" />
 				</Linker>
 			</Target>
 		</Build>
@@ -49,6 +50,7 @@
 		<Unit filename="include/List.hpp" />
 		<Unit filename="include/Menu.hpp" />
 		<Unit filename="include/Pixel.hpp" />
+		<Unit filename="main.cpp" />
 		<Unit filename="src/Car.cpp" />
 		<Unit filename="src/Collectable.cpp" />
 		<Unit filename="src/ConsoleSprite.cpp" />
@@ -56,7 +58,6 @@
 		<Unit filename="src/List.cpp" />
 		<Unit filename="src/Menu.cpp" />
 		<Unit filename="src/Pixel.cpp" />
-		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

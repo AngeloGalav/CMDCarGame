@@ -34,7 +34,7 @@ int Collectable::getEffect()
 
     Il modo in cui si muove dipende dal valore di direction.
 
-    E' molto diverso dal metodo Movement della classe Car.
+    E' molto diverso dal metodo Movement della classe Car, in quanto non permette input da tastiera.
 */
 void Collectable::Movement()
 {
@@ -47,7 +47,7 @@ void Collectable::Movement()
         translate(direction, 1);
         renderSprite();
 
-        //impedisce a un elemento essere bloccato
+        //impedisce a un elemento essere bloccato (in caso spawni ai bordi della strada)
         if (direction != 0 && rect_collider.leftLine <= LEFT_SCREEN_BOUNDARY)
         {
             deleteSprite();

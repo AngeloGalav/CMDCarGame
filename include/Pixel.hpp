@@ -1,7 +1,6 @@
 #ifndef PIXEL_HPP
 #define PIXEL_HPP
 #include "Definitions.hpp"
-#include <conio.h>
 #include <windows.h>
 #include <iostream>
 

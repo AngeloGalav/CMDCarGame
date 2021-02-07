@@ -1,10 +1,9 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include "Pixel.hpp"
-#include <iomanip>
 
 //struct delle informazioni di livello.
-struct level_info   ///DO NOT DELETE THIS!!!!!!!!
+struct level_info
 {
     int level_number;
     int points;

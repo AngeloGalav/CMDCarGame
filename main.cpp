@@ -1,10 +1,8 @@
 #include "include\LevelManager.hpp"
 #include "include\Menu.hpp"
-#include <windows.h>
 
 void Play(HANDLE hConsole, LevelManager level_manager, Menu mainMenu);
 void windowOptions();
-void DebugWindow(HANDLE hConsole, Car* playerObject, LevelManager level);
 
 int main()
 {
@@ -14,7 +12,7 @@ int main()
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     //creazione classe levelmanager
     LevelManager levelManager(hConsole);
-    //occulta il cursore
+    //occulta il cursore e fissa le dimensioni della finestra.
     windowOptions();
 
     Menu mainMenu = Menu();

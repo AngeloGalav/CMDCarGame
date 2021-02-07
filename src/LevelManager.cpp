@@ -18,10 +18,7 @@ LevelManager::LevelManager(HANDLE thConsole)
     enemyCar = Collectable(filePath[3], -1000, EnemyCar, hConsole);
 }
 
-double clockToMilliseconds(clock_t ticks){
-    // units/(units/time) => time (seconds) * 1000 = milliseconds
-    return (ticks/(double)CLOCKS_PER_SEC)*1000.0;
-}
+
 /**
     Metodo che viene chiamato all'inizio del gioco.
 */
@@ -81,10 +78,6 @@ void LevelManager::Start()
 
     UIGameInfoInit();
     playerCar.renderSprite();
-
-    fpsCount = 0;
-    deltaTime = 0;
-    fps = 0;
 }
 
 /**
@@ -92,7 +85,6 @@ void LevelManager::Start()
 */
 void LevelManager::Update()
 {
-    clock_t beginFrame = clock(); //misuro il tempo di un frame per il calcolo degli fps
     Sleep(game_speed);
 
     UIGameInfo();
@@ -124,7 +116,7 @@ void LevelManager::Update()
         time = 0;
     }
 
-    playerCar.optimized_Movement();
+    playerCar.optimized_Movement(); //permette il movimento della macchinina
 
     for(int i = 0; i < MAX_ON_SCREEN_OBJECTS; i++)
     {
@@ -143,18 +135,7 @@ void LevelManager::Update()
     checkColliders();
 
     //tolgo il ghosting.
-    playerCar.renderSprite();
-
-    clock_t endFrame = clock();
-
-    deltaTime += endFrame - beginFrame;
-    fpsCount++;
-
-    if (clockToMilliseconds(deltaTime) > 1000.0){   //calcolo fps
-        fps = (((double) fpsCount)/deltaTime) * 10000.0;
-        deltaTime = 0;
-        fpsCount = 0;
-    }
+    playerCar.renderSprite();;
 
     if (devMode) DebugWindow();
 }
@@ -271,8 +252,8 @@ void LevelManager::Spawn()
         collectables[k].available = false;
         if (randomValue == 0) collectables[k].object = gas;
         else if (randomValue == 1) collectables[k].object = puddle;
-        else if (randomValue == 2) {collectables[k].object = enemyCar; collectables[k].object.randomDir();}
-
+        else if (randomValue == 2) {collectables[k].object = enemyCar; collectables[k].object.randomDir();} //se è una macchina, può andare a
+                                                                                                            //dx,sx oppure dritto
         randomValue = rand() % 54 + (LEFT_SCREEN_BOUNDARY + 1);
         collectables[k].object.moveTo(randomValue, 0);
 
@@ -335,7 +316,8 @@ void LevelManager::gotoPos(int x, int y)
 */
 void LevelManager::enviromentAnimationRenderer()
 {
-    if (frameAnimationEnvBool){
+    if (frameAnimationEnvBool)
+    {
         for (int j = 0; j < LOWER_SCREEN_BOUNDARY; j++)
         {
             gotoPos(LEFT_SCREEN_BOUNDARY, j);
@@ -498,9 +480,6 @@ void LevelManager::UIGameInfo()
     cout << " Score: " << setw(11) << points;
     window_position.Y++;
     SetConsoleCursorPosition(hConsole, window_position);
-
-    SetConsoleTextAttribute(hConsole, BLACK_B_YELLOW_F);
-    cout << " FPS: " << setw(13) << ((int)fps )/ 10.0;
 }
 
 /**
@@ -616,6 +595,5 @@ void LevelManager::DebugWindow()
     SetConsoleCursorPosition(hConsole, window_position);
 
     //mostra info di ciascun pixel della macchina
-
     playerObject->printSinglePixelInfo(&window_position);
 }

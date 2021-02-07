@@ -5,7 +5,7 @@
 
 enum CollectableType
 {
-    UnknownCollectable = -1,
+    UnknownCollectable = -1,    //parte da -1 (così gli altri enum saranno 0,1,2)
     EnemyCar = 0,
     Puddle,
     Gas
@@ -15,9 +15,9 @@ class Collectable : public ConsoleSprite
 {
     protected:
         bool stop;  //booleano che stoppa l'oggetto dopo una collisione.
-        int effect;
+        int effect; //punti sommati al giocatore quando viene colpito
         CollectableType collectable_type;
-        int direction;
+        int direction;  //direzione di movimento dell'oggetto
 
     public:
         //constructors

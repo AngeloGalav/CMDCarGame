@@ -12,7 +12,7 @@ class Menu
     protected:
         _COORD position;
         int width;
-        int height ;
+        int height;
         void printTextFile(char* directory, bool centered, int x, int y);
         void printStats();
         void printStatsRec(int nline);
@@ -29,7 +29,7 @@ class Menu
         Menu();
         bool devModeEnabler;
         bool lightWeightEnabler;
-        bool back_to_main;
+        bool back_to_main;  //booleano che permette di uscire dall'how to play
 
         bool exitMenu();
         void SetWindow();

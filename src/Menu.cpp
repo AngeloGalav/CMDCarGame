@@ -97,10 +97,10 @@ void Menu::GameOverMenu()
     cout << "# Exit";
 
     position.Y += 3;
-    printStats();
+    printStats();   //stampa le statistiche di livello
 
     position.Y += 2;
-    displayPoints();
+    displayPoints();    //mostra il punteggio di gioco
 
     while(!stop)
     {
@@ -157,7 +157,7 @@ void Menu::MainMenu()
     SHORT CursorMenuStartPosition = 0;
 
     //colore del titolo
-    SetConsoleTextAttribute(hconsole, BLACK_B_RED_F); //12
+    SetConsoleTextAttribute(hconsole, BLACK_B_RED_F);
     position.X = 0;
     position.Y = 10;
 
@@ -405,7 +405,7 @@ void Menu::printStats()
 
 void Menu::printStatsRec(int nline)
 {
-    if ( !(stats_from_level->isEmpty()) && nline < 10)
+    if ( !(stats_from_level->isEmpty()) && nline < 10) //ne stampa al massimo 10 (la lsita è lunga al massimo 12)
     {
         cout << "- ";
 

@@ -159,6 +159,8 @@ void Queue<level_info>::printInfo(level_info info)
 
 /**
     Stampa gli elementi di una queue di int.
+
+    Viene usato nella debugWindow nella devMode.
 */
 template<>
 void Queue<int>::debugPrint()

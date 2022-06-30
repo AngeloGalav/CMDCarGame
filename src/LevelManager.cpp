@@ -135,7 +135,7 @@ void LevelManager::Update()
     checkColliders();
 
     //tolgo il ghosting.
-    playerCar.renderSprite();;
+    playerCar.renderSprite();
 
     if (devMode) DebugWindow();
 }

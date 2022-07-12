@@ -3,6 +3,10 @@ Progetto di Programmazione Anno 2019/2020
 
 Sviluppato da Angelo Galavotti, Adriano Pace, Denis Pondini.
 
+## Screenshots
+![Immagine1](screenshots/Screenshot.png)
+![Immagine2](screenshots/Screenshot_2.png)
+
 ## What is this?
 
 Questa repo contiene il codice di CMDCarGame, il nostro progetto per il Corso di Programmazione all'Università di Bologna. 
@@ -14,7 +18,7 @@ C'è anche una modalità ASCII con grafica più leggera per i sistemi con CPU pi
 
 L'applicazione è compatibile unicamente con sistemi Windows. 
 
-## How to Play:
+## How to Play
 
 Usare le frecce direzionali per muoversi. Per guadagnare punti raccogliere le taniche di benzina
 ed evitare le pozzanghere (altrimenti vengono tolti 100 punti). Ogni volta che si raggiungono 1000 punti si raggiunge il livello successivo. Altrimenti, 
@@ -26,7 +30,7 @@ In caso il punteggio sia negativo quando si è al livello 1, il gioco si ferma e
 Se si vuole tornare al Menu principale mentre si gioca, per esempio per ricominciare la partita, basta premere il pulsante 'esc',
 che permette immediatamente di arrivare alla schermata di Game Over e quindi di tornare al menu principale.
 
-## How to Compile:
+## How to Compile
 
 Si può compilare l'applicazione direttamente da CodeBlocks usando il file .cbp, oppure è possibile compilare e giocare direttamente dal Command Prompt di Windows, usando i comandi:
 
@@ -35,10 +39,7 @@ g++ -o Game.exe main.cpp
 Game.exe
 ```
 
-## Libraries:
+## Libraries
 Abbiamo usato unicamente `windows.h` per manipolare il terminale. 
 
-## Screenshots:
-![Immagine1](screenshots/Screenshot.png)
-![Immagine2](screenshots/Screenshot_2.png)
 

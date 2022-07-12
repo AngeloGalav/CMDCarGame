@@ -9,3 +9,5 @@ Gioco.exe
 .vscode/tasks.json
 .vscode/tasks.json
 .vscode/
+obj/
+bin/
